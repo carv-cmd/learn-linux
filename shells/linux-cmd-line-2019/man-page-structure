@@ -1,0 +1,30 @@
+-----------------------------------------------------
+-----------------------------------------------------
+	  -- Man Page Organization --               
+-----------------------------------------------------
+-----------------------------------------------------
+
+| Section | Contents
+---------------------------------------------------------------
+|    1    | User commands
+|    2    | Programming interfaces for kernal system calls
+|    3    | Programming interfaces to the C library
+|    4    | Special files such as device nodes and drivers
+|    5    | File formats
+|    6    | Games and amusements such as sccreen savers
+|    7    | Miscellaneous
+|    8    | System administration commands
+--------------------------------------------------------------
+
+-> Command Structure: | <man><SECTION><SEARCH_ITEM> |
+
+	-> man 5 passwd
+
+		-> displays man page describing file format of '/etc/passwd' file
+
+
+
+
+
+-----------------------------------------------------
+-----------------------------------------------------

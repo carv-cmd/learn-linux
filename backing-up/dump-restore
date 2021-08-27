@@ -1,0 +1,229 @@
+##############################################################################
+
+                      ----- 'dump' | 'restore' -----
+
+##############################################################################
+===================================================================
+-----------------------------------------------------------------
+# General Commands
+-------------------------
+
+-> dump					- ext2/3/4 filesystem backup
+-> restore				- restore file(system) from `dump`.bakup
+-> cpio					- copy files to and from archives
+
+
+===================================================================
+-----------------------------------------------------------------
+# `dump` Considerations
+---------------------------
+
+-> How to 'properly `dump` a filesystem & --std_options'.
+
+-> How the 'backup ends up on the volume'?
+
+-> How to 'view a `dump` volumes table of contents'?
+
+-> How to 'manipulate volumes' and 'restore from `dump` backups'?
+
+-> The 'limitations' of 'dump' and 'restore'?
+
+-> 'Best Practices' if we 'take a `dump` in regular intervals'.
+
+
+===================================================================
+-----------------------------------------------------------------
+## `dump` Location
+--------------------
+
+-> Just be sure the device is not mounted before performing these operations
+
+	-> The 'df' command will come in handy throughout here
+
+
+-> Ideally only 'create one partition' on the usb drive
+
+	-> This makes managing these backups during a restore much easier
+
+	-> 'See fdisk/gdisk man page', dont blame me for hosed partition tables
+
+
+-> We then need a filesystem on this partition
+
+	-> 'mkfs.ext4' should work for most basic configurations
+
+	 >>>' sudo mkfs.ext4 /dev/sda1 '
+
+
+-> Next setup an 'automnt directory' point somewhere for this 'dev:partition'
+
+	-> Then create a user group for backups, etc (see ./new-usrs-grps)
+
+	 >>>' mkdir /mnt/backups/device_xyz '
+
+	 >>>' sudo chown -R :bakups /backups '
+
+
+-> As always backup /etc/fstab before modifying it
+
+	-> After 'fstab' modification, test the automounting works
+
+	 >>>' sudo mount -a '
+
+
+-> If nothing crashed, good job, now see if the device was automounted 
+
+	-> You should see the filesystem '/dev/sdaX' mounted on '/'
+
+	 >>>' df '
+
+
+-> An automounting procedure allows for effective script tests
+
+	-> 'df' returns most of whats needed for the first stage of validation tests
+
+
+-> With automounting, script doesnt have to fail on a fairly common error
+
+	-> If the proper device is system visible, the script should know what to do
+
+
+-> Tests such as;
+
+	-> [[ device is non-existent ]] && terminate w/ info_error
+
+	-> [[ device is full ]] && [[ chk_options && fix ]] || terminate w/ info_error
+
+	-> [[ archive namespace conflicts ]] && resolve || terminate w/ info_error
+ 
+
+-> Of course some user interaction will be required at some point
+
+	-> But the goal is to 'minimize that interaction' as much as possible
+
+	-> Validation ensures you only write where you intend to
+
+
+===================================================================
+-----------------------------------------------------------------
+## `dump`
+-----------------
+
+-> Basic `dump` syntax & options
+
+	>>>' dump levelunbdsf blkg-factor density size device-name file_system '
+
+
+-> Nowadays its fairly easier with usb-mass-storage devices
+
+	-> We can omit; blkg-factor, density, and size for the '-a' option
+
+
+-> Example dumping the filesystem from root;
+
+	 >>>' suodo dump 0unbdsf 128 141000 11500 /dev/sda / '
+
+
+-> The output can be a device, or just a regular file
+
+	-> The latter makes managing backups easier w/ todays storage methods
+	
+	-> 'Compression' can be easily applied to these regular files w/ 'bzip2'
+
+
+-> Get the file listings on volumeXYZ and write output to unique filename
+
+	-> Then grep <filename> makes restoring/searching 10x easier
+
+	 >>>' sudo restore tbfy 128 /dev/sda > dump.fs_root.lvl_0.aug-18-21 '
+
+
+-> Additionally there are 3 general rules to follow;
+
+	-> 'Automation' [ should not require swapping volumes, (config dependant) ]
+	
+	-> 'Intelligence' [ should determine for itself what to backup, (exclude lists = bad)]
+
+	-> 'Comprehensive' [ dont forget anything ]
+
+
+-> The shell script 'hostdump.sh' is a good framework to use for custom backups
+
+
+===================================================================
+-----------------------------------------------------------------
+## Validate `dump`
+-------------------
+
+-> We can take measures to 'verify the dump volume is intact '
+
+	-> Still, its 'no substitute' for testing a 'full restore'
+
+
+
+===================================================================
+-----------------------------------------------------------------
+## `restore`
+-----------------
+
+-> Using restore in interactive mode allows you to navigate the file tree
+
+	 >>>' sudo restore isbf 1 128 /dev/sda '
+
+-> Is the 'backup' volume 'readable'?
+
+	 >>>' sudo restore tbfy block-size device-name '
+
+-> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

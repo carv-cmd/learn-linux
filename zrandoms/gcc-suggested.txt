@@ -1,0 +1,17 @@
+cpp-doc
+gcc-9-locales
+gcc-9-base
+gcc-9-doc
+gcc-multilib
+gcc-doc
+glibc-doc
+gdp
+libstdc++-9-doc
+
+autoconf
+automake
+libtool
+flex
+bzr
+bison
+debian-keyring

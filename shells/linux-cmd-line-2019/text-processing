@@ -1,0 +1,407 @@
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+         ------------- TEXT PROCESSING ------------- 
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+> Commons
+----------------------------------------------------------------------
+
+### cat ###
+
+	>>> cat -Ans 
+		> A: Shows hidden characters
+		> n: Numbers lines
+		> s: Limits spacing to 1 between separated lines
+
+--------------------------------------------------------------
+
+### sort ###
+
+-> Since 'sort' can accept multiple files as input..
+-> Merge sorting many files into a single file is easy
+
+	 >>> cd /log; sort -n * >> /xyz/sorted_logs.txt; cd -
+
+
+-> For sorting in the context of fields
+	
+	 >>> sort -k 1,1 -k 2nr distro-shuffle.txt
+
+	 >>> sort -k 3.7nbr -k 3.1nbr -k 3.4nbr distro-shuffle.txt
+
+	 >>> sort -t ':' -k 7 /etc/passwd | head
+
+
+-> Easy find the biggest disk consumers in a given directory with sort
+
+-> First we 'du' the target directory;
+
+--> 'sort -nr' sorts by disk usage w/ largest consumers at the top;
+
+---> That result is piped into head to limit unecessary output
+
+	 >>> du -c /var/log/* | sort -nr | head > disk-consumers.txt
+
+ 
+--------------------------------------------------------------
+
+### uniq ###
+
+-> Given (sorted_file|stdin); 
+
+	-> uniq removes any duplicate lines, & sends the results to stdout
+
+	-> Often used with sort to clean the output of duplicates
+
+-> To be clear it must be used with a sorted file to remove duplicates
+
+ OPTION | DESCRIPTION
+--------|----------------------------------------------
+  -c    | Output list of duplicate lines preceded
+        | by the number of times the line occurs
+--------|----------------------------------------------
+  -d    | Output ONLY DUPLICATE lines
+--------|----------------------------------------------
+ -f n   | Ignore n leading fields in each line
+--------|----------------------------------------------
+  -i    | Ignore case during the line comparisons
+--------|----------------------------------------------
+ -s n   | Ignore leading n characters of each line
+--------|----------------------------------------------
+  -u    | Output ONLY UNIQUE lines
+--------|----------------------------------------------
+
+
+
+----------------------------------------------------------------------
+> Slicing and Dicing
+----------------------------------------------------------------------
+
+### cut ###
+
+--------------------------------------------------------------------------
+  OPTION  |    LONG OPTION    |  DESCRIPTION
+----------|-------------------|-------------------------------------------
+          |                   | Extract the portion of the line defined
+ -c list  | --characters=list | by list. The list may consist of one or 
+          |                   | more comma-separated numerical ranges.
+----------|-------------------|-------------------------------------------
+ 	  |   		      | Extract one or more fields from the line 
+ -f list  |   --fields=list   | as defined by list. List may contain (F>1)
+          |                   | fields or field ranges separated by commas
+----------|-------------------|-------------------------------------------
+          |		      | When -f specified, use delim as the field
+ -d delim | --delimiter=delim | delimiting character. By default, fields
+          |                   | must be separated by a single tab character
+----------|-------------------|-------------------------------------------
+          |   --complement    | Extract the entire line of text, except for
+          |                   | those portions specified by ( -c | -f )
+----------|-------------------|-------------------------------------------
+
+-> Essentially just slices all rows of given column(s)
+	
+	-> To get just the list of release dates try the following:
+	
+	 >>> cut -f 3 distros-sort.txt 
+
+-> Quickly see all programs registered in passwd
+
+	 >>> cut -d ':' -f 1 /etc/passwd | head
+
+
+--------------------------------------------------------------
+
+### paste ###
+
+-> Opposite of cut, paste adds columns of text to a file
+
+	 >>> paste dist-dates.txt dist-versions.txt
+
+
+--------------------------------------------------------------
+
+### join ###
+
+-> We can think of join almost like a relational database join 
+
+	-> That is, data from multiple tables with a shared key is aggregated into one
+
+-> See 'man join' for specific uses
+
+
+----------------------------------------------------------------------
+> Comparing Text
+----------------------------------------------------------------------
+
+### comm ###
+
+> comm compares 2 text files and;
+
+-> Displays lines that are unique to each + lines they have in common
+
+	 >>> comm foo-1.txt foo-2.txt
+	
+-> Display only the common lines
+
+	 >>> comm -12 foo-1.txt foo-2.txt
+
+-> Display only the unique lines
+
+	 >>> comm -3 foo-1.txt foo-2.txt
+
+
+--------------------------------------------------------------
+
+### diff ### 
+
+-> Think of comm as a text editor and diff as an IDE
+
+-> diff provides much more functionality for both input and output
+
+-> A common use for diff is the creation of 'diff files' or 'patches' 
+
+	-> Then used by programs like 'patch' to convert one version of a file to another version
+
+	 >>> diff -c file-1 file-2
+
+---------------------------------------------------------
+  CHANGE  |  DESCRIPTION
+----------|----------------------------------------------
+  r1ar1   | Append lines at position r2 in the second
+          | file to position r1 in the first file
+----------|----------------------------------------------
+  r1cr2   | Change(replace) lines at position r1 w/ lines
+          | at the position r2 in the second file
+----------|----------------------------------------------
+  r1dr2   | Delete the lines in first file at 
+	  | position r1, which should have appeared
+          | at range r2 in the second file
+---------------------------------------------------------
+
+
+--------------------------------------------------------------
+
+### patch ### 
+
+-> This program is used to apply changes to text files
+
+-> It accepts output from diff;
+	
+	-> & is generally used to convert older version files into newer versions
+
+// Below is in context of the Linux kernel developers
+
+-> Changes to the kernel are small and incremental
+
+-> Its asinine to send all other devs a complete source tree w/ each update
+
+-> Instead a diff file is submitted with just those specific changes
+
+	-> The reciever then uses 'patch' to apply the change to their local source tree
+
+-> Using diff/patch 2 piece combo offers 2 significant advantages:
+
+	1). The diff file is small, compared to the full size of the source tree
+
+	2). The diff file concisely shows the change being made
+	     -> This means recievers can painlessly evaluate it
+
+
+--------------------------------------------------------------
+
+### tr ### 
+
+-> tr is used to 'transliterate' characters
+
+-> Transliteration is the process of changing characters from one alphabet to another
+
+	-> Kind of a character-based search-and-replace operation
+	
+	-> For example, converting all characters from lower to upper
+
+	 >>> echo "lowercase letter: | tr a-z A-Z
+
+-> tr accepts 2 arguments:
+
+	-> A set of characters to convert from 
+	
+	-> A corresponding set of characters to convert to 
+
+-> Character sets may be expressed in one of three ways:
+
+	-> Enumerated list: ABDCEFG
+
+	-> Character range: A-G
+
+	-> POSIX character class: [:upper:]
+
+-> tr also allows characters to simply be deleted from the input stream
+
+-> If you want to convert from unix to dos like a fucking gangster;
+
+	-> i.e: we must delete the cariage return( \r )
+
+	 >>> tr -d '\r' < dos_file > unix_file
+
+-> Its also easy to remove repeated characters by specifying the -s option
+
+	>>> echo "fo0fo0fo0fo0" | tr -s ab
+
+
+--------------------------------------------------------------
+
+### sed ### 
+ 
+-> Short for stream editor
+
+	>>> echo "front" | sed 's/front/back/'
+
+-------------------
+> ADDRESS NOTATION
+------------------------------------------------------------------
+   ADDRESS   |  DESCRIPTION
+-------------|----------------------------------------------------
+      n      | A line number where n is a positive integer
+-------------|----------------------------------------------------
+      $      | The last line
+-------------|----------------------------------------------------
+             | Lines matching a POSIX basic regular expression.
+   /regex/   | Note that the regex is delimited by slash chars.
+             | Alternately; \crexexpc can be used.
+-------------|----------------------------------------------------
+ addr1,addr2 | Range of lines from addr1 to addr2, inclusive.
+             | May be any of the single address forms listed above
+-------------|----------------------------------------------------
+ first-step  | Match the line represented by the number first, 
+	     | Then each subsequent line at step intervals
+-------------|----------------------------------------------------
+  addr1, +n  | Match addr1 and the following n lines
+-------------|----------------------------------------------------
+    addr1    | Match all lines except addr, may be any form listed
+-------------|----------------------------------------------------
+
+-> Some examples searching with sed
+	
+	 >>> sed -n '/SUSE/p' distro-shuffle.txt
+
+	 >>> sed -n '/F/p' distro-shuffle.txt
+
+	 >>> sed -n '/F/!p' distro-shuffle.txt
+
+-------------------------
+> BASIC EDITING COMMANDS
+-------------------------------------------------------------------
+   ADDRESS   |  DESCRIPTION
+-------------|-----------------------------------------------------
+      =      | Output the current file number
+-------------|-----------------------------------------------------
+      a      | Append text after the current line
+-------------|-----------------------------------------------------
+      d      | Delete the current line
+-------------|-----------------------------------------------------
+      i      | Insert text in front of the current line
+-------------|-----------------------------------------------------
+             | Print the current line. By default, sed prints
+      p      | evert line and only edits lines that match a 
+             | specified address within the file. The deafult
+             | behavior can be overridden by specifying -n option
+-------------|-----------------------------------------------------
+      Q      | Exit sed without processing any more lines.
+             | If -n options is not specified, output current line 
+-------------|-----------------------------------------------------
+ 		     | Substitute the contents of replacement
+		     | wherever regexp is found. replacement may
+s/regexp/replacement/| include the special character '&' which is
+		     | equivalent to the text matched by regexp.
+		     | See "back references" for more details
+---------------------|---------------------------------------------
+    	             | Perform transliteration by converting
+    y/set1/set2	     | characters from set1 to the corresponding
+		     | characters in set2. Note that unlike tr,
+		     | sed requires that both sets be = length
+-------------------------------------------------------------------
+	
+-> The -s option is by far the most commonly used editing command
+
+-> With sed its simple to transform MM/DD/YYYY -> MM-DD-YYYY 
+
+	-> Much less error prone and time consuming than by hand
+	
+-> The syntax: sed 'z/regexp/replacement/' distro-shuffle.txt
+
+	-> regexp: [0-9]{2}/[0-9]{2}/[0-9]{4}$	
+	
+-> We then use back-references to build subexpressions
+
+-> In this case theres 3: (month)/(day)/(year)
+
+	-> ([0-9]{2})/([0-9]{2})/([0-9]{4})$
+
+-> Then a replacement for the year, a dash, the month, and the day: 
+
+	-> \2-\1-\2
+
+-> Which gets us to this clusterfuck:
+
+	 >>> sed 's/\([0-9]\{2\}\)\/\([0-9]\{2\}\)\/\([0-9]\{4\}\)$/\3-\1-\2' distro-shuffle.txt
+
+-> To perform a replacement over n instances, use the /g flag
+
+	 >>> echo "aaabbbccc" | sed 's/b/B/g'
+
+-> We can construct much more complex commands in a script
+
+** Copy script from sed file in theranos to here **
+
+	 >>> vim sed-script.sed
+
+
+--------------------------------------------------------------
+
+### aspell ### 
+
+-> aspell is an interactive spelling checker
+
+->> basic syntax:  aspell check textfile
+
+-> Easily check HTML files with the -h option
+
+	 >>> aspell -h check foo-html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

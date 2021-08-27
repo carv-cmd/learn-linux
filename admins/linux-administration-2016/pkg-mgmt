@@ -1,0 +1,354 @@
+################################################################################
+################################################################################
+
+				----------- Managing Software ------------
+
+################################################################################
+################################################################################
+
+========================================================================
+----------------------------------------------------------------------
+# Debian Package Management System (DPMS)
+------------------------------------------
+
+       -----------------------------------
+      //////         dpkg         	 \\\\\\
+	 /////							   \\\\\
+   //////       APT(apt-get,etc)        \\\\\\
+  /////									  \\\\\
+//////   synaptic,aptitude,adept,dselect   \\\\\\
+--------------------------------------------------
+
+-> At the core of DPMS is the 'dpkg' (Debian Package) application
+
+	-> dpkg can directly manipulate debian packages ( .deb )
+
+	-> dpkg is the DPMS backend, and various frontend wrappers exist for it
+
+
+-> APT probably being the most well known 
+
+	-> apt is actually a library of programming functions
+	
+	-> These functions are used as middleground, such as;
+
+	 >>> apt-get 
+
+	 >>> apt-cache
+
+
+-> Several user-land packages exist as well such as 'aptitude'
+
+	-> These are text-based / terminal views resembling a GUI
+
+	-> Quickly view complex dependencies w/o much effort
+
+
+-------------------------------------------------------------------
+
+-> A difference to note between APT and dpkg;
+
+	-> APT does not directly deal with .deb packages
+
+
+-> Instead software is managed via the repositories specified in .config files
+
+	-> The primary config file being 'sources.list'
+
+
+-> Nevertheless, the DPMS tool of choice falls on user preference / comfort with it
+
+	-> Any DPMS tool can directly manage software on Debian-like systems
+
+
+-> Essentially;
+	
+	-> dpkg: low level programatic interface
+
+	-> APT: higher level dpkg API
+
+	-> aptitude: text-based front end utilizing the apt library
+
+
+========================================================================
+----------------------------------------------------------------------
+# Ubuntu Software Management
+------------------------------
+
+----------------------------
+## Querying for Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> List all currently installed software on host
+
+	 >>> dpkg -l
+
+-> Get basic information about about an installed pkg
+
+	 >>> dpkg -l bash
+
+-> Get verbose information about an installed pkg
+
+	 >>> dpkg --print-avail bash
+
+-> View the list of files that comes with a pkg
+
+	 >>> dpkg-query -L bash
+
+
+----------------------------------
+## Installing Software in Ubuntu
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Install a .deb file directly w/ "dpkg"
+
+	 >>> sudo dpkg --install yeo_3*.deb
+
+-> Install software from sources list w/ "apt-get"
+
+	-> the -y option???
+
+	 >>> sudo apt-get -y install lynx
+
+### [ apt-get ] table
+=======================================================
+   COMMAND    |  MEANING
+--------------|---------------------------------------
+    update    | Retrieve new lists of packages
+--------------|---------------------------------------
+    upgrade   | Perform an upgrade
+--------------|---------------------------------------
+    install   | Install new packages
+--------------|---------------------------------------
+    remove    | Remove packages 
+--------------|---------------------------------------
+  autoremove  | Remove automatically all unused pkgs
+--------------|---------------------------------------
+    purge     | Remove packages and config files
+--------------|---------------------------------------
+ dist-upgrade | Distribution upgrade
+--------------|---------------------------------------
+    check     | Verify theres no broken dependencies
+=======================================================
+
+
+========================================================================
+----------------------------------------------------------------------
+# Removing Software in Ubuntu
+------------------------------
+
+-> Uninstalling with dpkg is easy
+
+	 >>> sudo dpkg --remove lynx
+
+-> apt has a very similar option
+
+	 >>> sudo apt-get remove lynx 
+
+-> 'apt-get install' can remove pkgs by appending ( - ) to the pkg 
+
+	 >>> sudo apt-get install tree lynx-
+
+-> To remove all traces of the pkg including config files, use purge
+
+	 >>> sudo apt-get --purge remove lynx 
+
+
+========================================================================
+----------------------------------------------------------------------
+# Compile & Install GNU Software
+----------------------------------
+
+-> Source code is typically made available as a "tarball", that is;
+
+	-> All individual files are archived into a single large file ( tar program )
+
+	-> The large file is then compressed using gzip, bzip, xz, etc
+
+
+-> Best practice, use single directory for building and storing tarballs
+
+	-> By convention this is usually: [ /usr/local/src ]
+
+	-> ~/src also works for users with limited privilages
+
+
+-> Just allows safe storage of the original tarball downloaded
+
+	-> If a program needs to be recompiled, the original pieces are still there
+
+
+-> Lastly its a good idea downloading into say [ /usr/local/src/unpacking ]
+
+-> Most authors follow the standard in creating a subdirectory for program files
+
+	-> Some dont, hosing whatever tidy directory the tarball was unpacked in
+
+	-> Unpack tarball in empty dir, then `mv ./unpacking/prog_dir ..`
+
+
+-------------------------------------------------------------------------------
+## Compiling the hello program
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------------------------------------------
+### Getting the Source Code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> First download the tarball into */src with wget
+	
+	-> [ wget ] : non-interactive network downloader 
+	-> [ -nc  ] : no clobber, fail if file already exists ( overwrite safety )
+	-> [ -P   ] : directory name to download tarball into
+
+	 >>> sudo wget -nc -P http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz
+
+---------------------------------------------------------------------------
+### Unpacking the Tarball
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Relocate `cd /usr/local/src`, and use tar to unpack file
+
+	-> [ -x ] : extract ( untar )
+	-> [ -v ] : verbose output
+	-> [ -z ] : invokes gzip to decompress file before 'untar' occurs
+				* [ y|j ] : if compressed  with bzip2 (.tar.bz2)
+	-> [ -f ] : must append to all other options, followed by tarball name
+
+	 >>> tar -xvzf hello-2.10.tar.gz
+
+---------------------------------------------------------------------------
+### Reading Install Docs!!!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Relocate into the "hello-2.10" directory that was just created
+
+	-> ALWAYS read the included 'README' & 'INSTALL' files
+
+	-> This will inform of any odd configurations, notes or warnings
+
+	 >>> less README INSTALL
+
+---------------------------------------------------------------------------
+### Configuring the Package 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Most packages ship with an auto-configure script named 'configure'
+
+	-> To see which configure options come with a pkg, include --help
+
+-> One commonly used option is --prefix
+
+	-> Allowing us to set the base directory where pkg get installed
+
+-> By default, most packages will use [ /usr/local ]
+
+	-> With each component of the pkg instlalling into the appropriate directory
+
+-> To view the configure options call the following in the build directory
+
+	 >>> ./configure --help | less
+
+-> With "--help=short" we can view pkg specific config options
+
+	 >>> ./configure --help=short
+
+
+-> Once satisfied w/ options; generate makefiles with configure script
+
+	 >>> ./configure
+
+---------------------------------------------------------------------------
+### Compiling the Package 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Only if the configure script completed w/o any errors proceed *
+
+-> The 'makefiles' just created are essentially an instruction set for "make"
+
+	-> They tell make which files to compile and the order to compile them in
+
+
+-> Optionally to run any self tests included w/ the pkg
+
+	-> This tests the just-built uninstalled binaries 
+
+	 >>> make check
+
+
+-> Just be sure to run make from the root directory of that pkg
+
+	 >>> make
+
+---------------------------------------------------------------------------
+### Installing the Package 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Next step is pretty easy
+
+	 >>> make install
+
+-> Or to run the provided test again on installed binaries
+
+	 >>> make installcheck
+
+---------------------------------------------------------------------------
+### Testing the Package 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> After installation its always a good idea to do basic tests
+
+	-> Execute the program as root
+
+	-> Execute the program as non-privilaged user if that access is required
+
+	 >>> /usr/local/bin/hello
+	 or
+	 >>> hello
+
+---------------------------------------------------------------------------
+### Cleanup
+~~~~~~~~~~~~~
+-> Number of ways to go about cleanup
+	-> Use case determines which method should be chosen
+
+
+-> To remove program binaries and obj files from the source code directory
+
+	 >>> make clean
+
+
+-> To also remove files created by ./configure (config on other machine)
+
+	 >>> make distclean
+
+
+-> Make uninstall will remove (usually all) the previously installed files
+
+	 >>> make uninstall
+
+
+-> We can also delete the subdirectory created when unpacking tarball
+	
+	 >>> cd /usr/local/src
+
+	 >>> rm -rf ./hello-2.10
+
+
+-> If we only want to remove the initial tarball
+
+	 >>> rm -f /usr/local/src/unpacking/hello-2.10.tar.gz
+
+
+---------------------------------------------------------------------------
+### Compile Errors
+~~~~~~~~~~~~~~~~~~~
+
+-> 'lib' errors: see man pages for ( ldconfig | ld.so ) 
+
+	-> Problem with global library (like DLLs)
+
+-> missing configure script: look for 'autogen.sh'
+
+-> broken source code: bad author oh well, any precompiled pkgs?
+
+
+---------------------------------------------------------------------------
+### The Purpose of hello-2.xx?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> On the surface hello is utterly useless
+
+	-> But remember it must be compiled to run
+
+	-> Therefore its a great sanity check if you just rebuilt your compiler 
+

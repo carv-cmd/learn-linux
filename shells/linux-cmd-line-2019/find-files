@@ -1,0 +1,238 @@
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--- Searching for Files (+ fast)
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+-> The 'locate' program runs a rapid pathname db search	
+
+	-> Any path which contains the given substring is returned
+	
+	-> Pipe output:(m)locate | grep <filter> to refine query results
+
+-----------------------------------------------------------------------------
+
+-> Finding files the 'hard' way with <find>
+	
+	>> find searching_directory Optional[ tests | options | actions ]
+
+---------------------------------------------------------------------------------------
+* TESTS
+---------------------------------------------------------------------------------------
+
+>>> -name "*.JPEG" 
+
+-------------------------------- 
+*  -type [ b | c | d | f | i ] 
+------------------------------------------------------ 
+ File Type   | Description 
+-------------|---------------------------------------- 
+  -type b    | Block special device file 
+-------------|---------------------------------------- 
+  -type c    | Character special device file 
+-------------|---------------------------------------- 
+  -type d    | Directory 
+-------------|---------------------------------------- 
+  -type f    | Regular file 
+-------------|---------------------------------------- 
+  -type l    | Symbolic link 
+-------------|---------------------------------------- 
+
+
+---------------
+*  -size +1M
+-------------------------------------------------------------
+ Character   | Unit
+-------------|-----------------------------------------------
+  -size b    | 512-byte blocks. Default if None specified
+-------------|-----------------------------------------------
+  -size c    | Bytes
+-------------|-----------------------------------------------
+  -size w    | 2-byte words
+-------------|-----------------------------------------------
+  -size k    | Kilobytes (units: 1,024 bytes)
+-------------|-----------------------------------------------
+  -size M    | Megabtyes (units: 1,048,576 bytes)
+-------------|-----------------------------------------------
+  -size G    | Gigabytes (untis: 1,073,741,824 bytes)
+-------------|-----------------------------------------------
+
+
+----------------------
+* find tests-table 
+* {items: [files, directories]}, {values: [contents, attributes]}
+----------------------------------------------------------------------------------------------
+    -TEST-	| -DESCRIPTION-
+----------------------------------------------------------------------------------------------
+  -cmin n	| Matches items whose values were last modified exactly 'n' mins ago.
+		| Use +/- to get newer/older than n resutls
+----------------|-----------------------------------------------------------------------------
+ -cnewer file	| Matches items whose values were last modified 
+		| more recently than those of 'file'
+----------------|-----------------------------------------------------------------------------
+  -ctime n	| Matches items whos values were last modified 'n*24' hours ago
+----------------|-----------------------------------------------------------------------------
+   -empty	| Matches empty files and directories 
+----------------|-----------------------------------------------------------------------------
+  -group name	| Match items belonging to 'group'
+		| May be expressed either as a group name or numeric group ID
+----------------|-----------------------------------------------------------------------------
+ -iname pattern	| Like the -name test but case-insensitive 
+----------------|-----------------------------------------------------------------------------
+    -num n	| Match files with inode number n.
+		| This is helpful for finding all the hard links to a particular node.
+----------------|-----------------------------------------------------------------------------
+   -mmin n 	| Match items whose contents were last modified 'n' minutes ago
+----------------|-----------------------------------------------------------------------------
+   -mtime n	| Match items whose contents were last modified 'n*24' hours ago 
+----------------|-----------------------------------------------------------------------------
+ -name pattern	| Match items with the specified wildard pattern
+----------------|-----------------------------------------------------------------------------
+  -newer file	| Match items w/ contents modified more recently than specified 'file'
+		| Particularly useful when writing backup shell scripts.
+		| * When executing a backup, update a mod-ts log 
+		| ** Then 'find' determines which files have changed since last log-update
+----------------|-----------------------------------------------------------------------------
+   -nouser	| Match files and directories that do not belong to a valid user
+		| Use to find remenants of deleted accounts, or detect malicious activity
+----------------|-----------------------------------------------------------------------------
+   -nogroup	| Match files or directories that do not belong to a valid group
+----------------|-----------------------------------------------------------------------------
+  -perm mode	| Match items that have missions set to the specified mode
+		| 'mode' can be expressed by either octal or symbolic notation
+----------------|-----------------------------------------------------------------------------
+ -samefile name	| Similar to -inum test. Match files that share same inode-num as file 'name'
+----------------|-----------------------------------------------------------------------------
+   -size n	| Match files of size 'n'
+----------------|-----------------------------------------------------------------------------
+   -size c	| Match files fo type 'c'
+----------------|-----------------------------------------------------------------------------
+  -user name	| Match files or directories belonging to user 'name'
+		| The user may be expressed by a username or by a numeric user ID
+----------------|-----------------------------------------------------------------------------
+
+--------------------------------------------------------
+* OPERATORS
+--------------------------------------------------------
+
+  OPERATOR  |  DESCRIPTION 
+------------|----------------------------------------
+   -and     | Match if tests on both sides of the 
+	    | operator are True 
+------------|----------------------------------------
+    -or     | Match if a test on either side of the
+	    | operator is True
+------------|----------------------------------------
+    ( )     | Group tests ( compund inequalities )
+------------|----------------------------------------
+           
+
+
+-> What if we wanted to find all the files and subs in a directory that had secure permissions
+
+*-> [ find all FILES that ARE NOT 0600 | find all DIRECTORIES that ARE 0700 ]
+	
+	- " expr1 -operator expr2 "
+
+	-- " \( expression 1 \) -or \( expression 2 \) "
+
+	--- " \( file with bad perms \) -or \( directory with bad perms \) "
+
+	->>> find ~ \( -type f -not -perm 0600 \) -or \( -type d -not -perm 0700 \)
+
+--------------------------------------------------------
+	
+
+--------------------------------------------------------
+* PREDEFINED ACTIONS 
+--------------------------------------------------------
+
+-delete 	- delete the currently matching file.
+
+-ls		- Perform equivalent of ls -dils on matching file.
+
+-print		- Output full pathname of matching file to stdout.
+		- Default action if no other action is specified.
+
+-quit		- Quit once a match has been made.
+
+--------------------------------------------------------
+* USER DEFINED ACTIONS
+--------------------------------------------------------
+Operators: [ -exec , -ok ]
+--------------------------------------------------------
+
+> Format:  -exec command {} ;
+
+> Where:
+	> command is the name of a command..
+
+	> {} is the symbolic representation of the current pathname
+	
+	> semicolon is a required delimiter indicating the end of the command
+
+> Its better to suffix with a plus sign as to not spawn a new instance
+
+	> Full example below:
+
+	 >>> find / -type f -name '*ssh*' -exec ls -l '{}' +
+	
+	-or-
+	
+	 >>> find / -type f -name '*ssh*' | xargs ls -l
+
+	-or-odd-filenames-
+
+	 >>> find / -iname '*.jpg' print0 | xargs --null ls -l 
+
+--------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+ 3239  find ze-* \( -type d -name 'dir-87' \) -and \( -type f -name 'file-G' \)
+ 3240  find ze-* \( -type f -not -name 'file-G' \) | grep 87
+ 3241  find ze-* \( -type f -name 'file-G' \) | grep 87
+ 3242  clear
+ 3243  find ze-* \( -type f -name 'file-G' \) | grep 87
+ 3244  find ze-* \( -type f -name 'file-G' \)
+ 3245  celar
+ 3246  clear
+ 3247  ls
+ 3248  stat ze-*
+ 3249  ls ze-* | grep time
+ 3250  ls ze-*
+ 3251  stat ze-*/timestamp
+ 3252  touch ze-*/timestamp
+ 3253  clear
+ 3254  ls
+ 3255  touch ze-sandbox/timestamp
+ 3256  ls ze-*
+ 3257  stat ze-*/timestamp
+ 3258  date
+ 3259  touch ze-*/timestamp
+ 3260  stat ze-*/timestamp
+ 3261* 
+ 3262  touch ze-*/timestamp; date
+ 3263  touch ze-*/timestamp; date; stat ze-*/timestamp
+ 3264  stat ze-*/timestamp touch ze-*/timestamp; date; stat ze-*/timestamp
+ 3265  stat ze-*/timestamp; touch ze-*/timestamp; date; stat ze-*/timestamp
+ 3266  find ze-* -type f -name 'file-X' -exec touch '{}' +
+ 3267  find ze-* -type f -newer ze-*/timestamp
+ 3268  tail -n 10 `history`
+ 3269  tail --help
+ 3270  tail history
+ 3271  tail $((history))
+ 3272  tail $(history)
+ 3273  history | tail
+ 3274  clear
+ 3275  history | tail -n 20
+ 3276  history | tail -n 30
+ 3277  history | tail -n 40
+ 3278  history | tail -n 40 > find-cool.txt

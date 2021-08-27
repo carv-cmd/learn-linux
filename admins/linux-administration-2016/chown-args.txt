@@ -1,0 +1,15 @@
+
+- chown -
+-----------|----------|
+ ARGUMENT  |  RESULTS |
+-----------|--------------------------------------------------------
+   bob     | Changes ownership from its current owner to user 'bob'
+-----------|-----------------------------------------------------------------------------------------
+ bob:users | Changes ownership from current owner to user 'bob' & file group owner to group 'users'
+-----------|-----------------------------------------------------------------------------------------
+ :admins   | Changes a group owner to the group 'admins
+-----------|---------------------------------------------------------------------------
+   bob:    | Changes from current owner to 'bob' & owner of login group to group bob
+-----------|---------------------------------------------------------------------------
+
+View "Exercising Our Privileges" on page 130

@@ -1,0 +1,310 @@
+##########################################################################
+##########################################################################
+
+                ----- Linux Users and Groups ----
+
+##########################################################################
+##########################################################################
+
+====================================================================
+-----------------------------------------------------------------
+# What Exaclty Constitutes a User?
+-----------------------------------
+
+-> Under Linux, every [ file ] and [ program ] must be owned by a [ user ]
+
+	-> Each user has a [ unique identifier ] called a [ user ID (UID) ]
+
+
+-> Each user must also belong to at least one [ group ] (collection of users)
+
+	-> Users may belong to multiple groups
+
+	-> Like users, groups have unique identifiers, called a [ group ID (GID) ] 
+
+
+-> The accesability of a file/program is is based on its UID's and GID's
+
+	-> A running program inherits [ rights & permissions ] of the user who invokes it
+
+--------------------------------------------------------------------------------------
+
+-> Each users rights can be defined in one of two ways;
+
+	-> Those of a [ normal user ] or those of a [ superuser ]
+
+
+-> A [ normal_user ] can access only;
+
+	-> What [ they own ], or have been [ given permission ] to run
+
+
+-> Permission is granted because the user either [ belongs to the file's group ]
+
+	-> Or because the file is [ accessible to all users ]
+
+
+-> A [ superuser ] is allowed to access ALL files and programs in the system
+
+	-> This unrestricted access is regardless of ownership as well
+
+	-> The 'root user' is the same thing as a 'superuser'
+
+
+-> In secure server environments sometimes an Access Control List (ACL) is required
+
+	-> This just allows for finer grained permissions for sensitive data?
+
+
+====================================================================
+-----------------------------------------------------------------
+# Where User Information is Kept
+-----------------------------------
+
+* Traditional method; Chapter-{26,27} cover ( NIS & LDAP )
+
+
+-> Windows Server uses the 'Active Directory' to take care of users and groups
+
+	-> To really configure this directory special software is required to interact
+
+
+-> In contrast, Linux stores all of its user data in plain text files
+
+	-> Beneficial for the simple reason of editing; vim, nano, emacs, etc all work...
+
+
+-> In many instances, larger sites take advantage of these text files
+
+-> By developing their own user administration tools
+
+	-> Creating new accounts can be automated
+
+	-> Make additions to corporate phone books, mailing lists, etc
+
+	-> Add information to websites
+
+	-> etc, etc, etc, ...
+	
+
+-> For new users, this is just showing the possibilities
+
+	-> Tools provided w/ the distro are more than adequate to start
+
+	-> Covered later in this page
+
+==============================================================================
+-----------------------------------------------------------------
+# User Management Tools
+--------------------------
+
+-> Some of the most popular command line options are;
+
+	> useradd
+	> userdel
+	> usermod
+	> groupadd
+	> groupdel
+	> groupmod
+
+-> CHECK MAN PAGE BEFORE USING ANY OF THESE
+-> SYSTEMS IMPLEMENT THEM IN DIFFERENT WAYS
+
+--------------------------------------------------------------------------
+# USER TOOLS
+--------------------------------------------------------------------------
+---------------------
+## adduser (useradd)
+~~~~~~~~~~~~~~~~~~~~~
+-> 'useradd' allows us to add a single user to the system
+
+	-> Note that options are almost always 100% optional
+
+	-> The 'useradd' tool assumes preconfigured defaults in its usage
+
+-> References '/etc/adduser.conf' configuration file
+
+---------------------
+## deluser (userdel)
+~~~~~~~~~~~~~~~~~~~~~
+-> 'userdel' as the name implies, we can delete users with this
+
+	-> Just be sure to purge the home directories as im not sure they get deleted 
+
+------------
+## usermod
+~~~~~~~~~~~~
+-> 'usermod' allows us to modify an existing user in the system 
+
+	-> All but one of the parameters for usermod are identical to useradd
+
+-> [ -l ] is the oddball, and allows you to change the login name 
+
+	-> Just make sure theyre not logged-in at all
+
+	-> May create a Linux registry-type error
+		*(theres no registry on Linux thank fucking god)
+
+
+--------------------------------------------------------------------------
+# GROUP TOOLS (note: changing group info doesnt auto sync with user info)
+--------------------------------------------------------------------------
+-----------------------
+## addgroup (groupadd)
+~~~~~~~~~~~~~~~~~~~~~~~
+-> 'groupadd' adds groups to the '/etc/groups' file
+
+-----------------------
+## delgroup (groupdel)
+~~~~~~~~~~~~~~~~~~~~~~~
+-> 'groupdel' self explanatory
+
+-------------
+## groupmod
+~~~~~~~~~~~~~
+-> 'groupmod' modifes group attributes
+
+
+==============================================================================
+-----------------------------------------------------------------
+# Users and Access Permissions
+--------------------------------
+
+-> How does Linux determine [ user|group ] access to system resources?
+
+	-> By checking the overall effective permissions on that resource
+
+	-> Resources being; files, programs, networks, etc, etc
+
+
+-> The traditional permissions model in Linux consists of 6 individual pieces
+
+	-> These 6 pieces are combined to form the overall resource permissions
+
+	-> The first 4 are standard permissions, followed by the special permissions
+
+
+=======================================================
+ OPTION | DESCRIPTION
+--------|---------------------------------------------
+    r   | Read permission
+--------|---------------------------------------------
+    w   | Write permission
+--------|---------------------------------------------
+    x   | Execute permission
+--------|---------------------------------------------
+    -   | No permission or no access
+--------|---------------------------------------------
+    s   | SetUID||SetGID (special permission)
+        | * use with extreme caution *
+--------|---------------------------------------------
+    t   | Sticky Bit (special permission)
+        | * prevent deletions in shared directories
+=======================================================
+
+
+-> Setting Sticky Bit
+
+	 >>> chmod +t /shared/sticky-dir/
+
+-> Unsetting Sticky Bit
+
+	 >>> chmod -t /shared/sticky-dir/
+
+
+# SetUID and SetGID should be avoided at all costs
+
+	-> Whenever a program runs, it inherits all rights of invoking user
+
+	-> If a user cant access resourceABC, neither can the program they invoked
+
+-> SetUID or SetGID, a program inherits rights of the programs owner, not the user
+
+	-> Meaning an unprivileged user could invoke a program with root privileges
+
+	-> Essentially bypassing the entire security model, and thats very exploitable
+
+-> If required the following octals should precede in a `chmod` call
+
+	 >>> chmod 4755 /bin/ls : SetUID
+
+	 >>> chmod 2755 /bin/ls : SetGID
+
+
+-----------------------------------------------------------------
+
+-> Additionally, there are 3 'classes' of users
+
+=======================================================
+ USER-TYPE | DESCRIPTION
+-----------|------------------------------------------
+   owner   | Owner of the file or application
+-----------|------------------------------------------
+   group   | Group that owns file or application
+-----------|------------------------------------------
+   world   | All users
+=======================================================
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+
+-> To see file permissions in any directory enter `ls -l`
+
+	-> The leftmost column contains permissions for each file
+
+	-> Examples: [ -rwxr-xr-x | drwxr-xr-x | -rw-r--r-- ]
+
+--------------------------------------
+# exList: ( | - | rwx | r-x | r-x | )
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> exList[0]:  ( - )  : File Type 
+
+	-> Leading elem is always the file type ( - )
+
+	-> Remember everything in linux is a file; (-: reg_file), (d: dir), (etc)
+
+
+-> exList[1]: ( rwx ) : Owner Permissions
+	
+	-> Access for user that wrote/installed/etc the file
+	
+	-> Corresponds with the second column in the `ls -l` listing
+
+
+-> exList[2]: ( r-x ) : Group Permissions
+
+	-> Access for group that owns file
+
+	-> Corresponds with the third column in the `ls -l` listing
+
+
+-> exList[3]: ( r-x ) : World Permissions
+
+	-> Access that any user on the system has to resource
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+
+# Key Points
+
+-> 'Each user' gets a 'unique UID'
+
+-> 'Each group' gets a 'unique GID'
+
+-> The '/etc/passwd' file 'maps UIDs' to 'usernames'
+
+-> Linux handles encrpyted passwords in multiple ways 
+
+-> Linux offers multiple tools to administer users
+
+-> As well the ease of creating our own admin tools
+
+-> Linux can store user|group info in various DBs that have a std format and structure
+
+-> PAM is Linux's generic way of handling multiple authentication mechanisms
+
+-> Additionally, Python handles these config files like a charm so..
+
+	-> read <file> as config
+
+-----------------------------------------------------------------

@@ -1,0 +1,211 @@
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+       ------------- Compiling Source Code -------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+-> There are 2 main benefits to compiling software:
+
+1). Availability: 
+
+	> Despite the number of precompiled programs in distribution repositories
+	 > some distributions may not include all the desired applications.
+	  > In this case, the only way to get that desire is to compile it from source
+
+2). Timeliness:
+
+	> While some distributions specialize in cutting edge versions of programs
+	 > Many do not (arch). This means if we want the latest release
+	  > You guessed it, were compiling it ourselves
+
+
+-----------------------------------------------------------------
+
+# Wot is compiling?
+
+-> Process of turning human-readable source code into CPU native language 
+
+-> For example a simplification of the python JIT compiler:
+
+	-> Python -> Bytecode -> Opcodes -> C++ -> Assembly -> Machine Code
+
+
+-----------------------------------------------------------------
+
+# Obtaining the Source Code
+
+*** Also need to figure out how to get GNU public key to verify .sig ***
+
+-> First we create a directory for the source code named 'src'
+
+-> Then download the source code into it using 'ftp'
+
+	 >>> cd ~; mkdir src
+
+	 >>> cd src
+
+	 >>>  ftp ftp.gnu.org
+
+	  # login: anonymous
+
+		ftp>>> cd gnu/diction; ls
+
+		ftp>>> get diction-1.11.tar.gz
+
+		ftp>>> bye
+
+-> Alternatively we can just use wget to access the ftp server over https
+
+	 >>> wget https://ftp.gnu.org/gnu/diction/diction-1.11.tar.{gz,gz.sig}
+
+---------------------------------------------------------
+
+-> The convention for source file location goes as such:
+
+	-> Were the sole "maintainer" and user;
+		
+		# /home/<user>/src/... (~/src)
+
+	-> Source we maintain but publicly available on the host;
+
+		# /usr/local/src
+
+	-> Source from distribution maintainers on our host;
+
+		# /usr/src
+
+
+-----------------------------------------------------------------
+
+# Unpacking
+
+-> Packages should be packaged conforming to the standard below
+
+	# (mkdir) project-.x.xx/source-tree
+
+-> We can verify this before hosing an otherwise tidy ~/src directory
+
+	# tar tsvf tarchive | head
+
+	 >>> tar tzvf tarchive.tar.gz | head
+
+-> Finally, unpack source-archive once source tree is validated:
+
+	 >>> tar xzf diction-1.11.tar.gz 
+
+	 >>> cd diction-1.11
+
+
+-----------------------------------------------------------------
+
+# Hiearchy
+ 
+-> Always examine README && INSTALL files before attempting compilation
+
+-> In diction-1.11/ there are a few '*.c' and '*.h' files
+
+	-> *.c are the actual C files for each module
+
+-> For the compiler to connect the modules;
+
+	-> It must recieve a description of all the modules needed to complete the entire program
+
+-> *.h are the header files 
+
+	-> They contain descriptions of the routines inlcuded in the source code file/library
+
+
+-> #include "getopt.h" 
+
+	> Instructs the compiler to read 'getopt.h'
+
+	> As its reading the source code in diction.c to "know" whats in 'getopt.c'
+
+	> 'getopt.c' file supplies routines that are shared by both (style|diction) programs
+
+
+-> #include <regex.h>
+
+	-> Also refering to header files, but reference headers outside current program source tree
+
+	-> They are supplied by the system to support the compilation of every program
+
+	-> We can find these files in the /usr/include directory	
+
+	 >>> ls /usr/include
+
+
+-----------------------------------------------------------------
+
+# Building the Program
+
+-> Most programs build with a simple, two-command sequence
+
+	 >>> ./configure
+
+	 >>> make
+
+-> configure is shell script supplied with every source tree
+
+	-> Tasked with analyzing the 'build environment' (host platform) 
+
+	-> This helps with automatic protability of the source code
+
+	-> The config.{guess,sub} may need to be updated if ./configure fails
+
+-> After running ./configure we should see a "Makefile" in the tree now
+
+	-> By running 'sudo make install' we can now call diction like any normal command
+
+-> The 3 basic steps:
+
+	1) ./configure
+
+	2) make
+
+	3) sudo make install
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

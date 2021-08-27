@@ -1,0 +1,569 @@
+---------------------------------------------------------
+---------------------------------------------------------
+   -------------- Strings and Numbers -------------
+---------------------------------------------------------
+---------------------------------------------------------
+
+-> Shell offers numerous features used to manipulate strings and numbers
+
+	-> In the instance of arithmetic expansion
+
+	-> The 'bc' program performs higher level math
+
+
+===============================================================================
+
+# Parameter Expansion
+
+-----------------------
+
+-> Always enclose parameter expansions in double quotes
+
+	-> This prevents unwanted word splitting
+
+	-> Encountered dealing with filenames
+
+
+===============================================================================
+
+## Basic Parameters
+
+---------------------
+
+-> Simplest form is the ordinary use of variables;
+
+	 >>> "$a" | "$var" | "$sys_info"
+
+-> May also be enclosed w/ curly's w/ no effect on expansion
+
+	-> Required when the variable is adjacent to other text
+
+	 >>> "${a}" | "${var}" | "${sys_info}" | "client_report_${yr}_${month}_${date}"
+
+-> As well as the method of accessing positional arguments greater than 9
+
+	 >>> ${11} | ${1024} | etc...
+
+
+===============================================================================
+
+## Expansions to Manage Empty Variables ( assign defaults )
+
+-------------------------------------------------------------
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+### Expand default if parameter empty
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Basic Default: if param=empty expand word; else expand param
+
+	 >>> ${parameter: -word}
+
+-> Offer custom name setting; set default $USER if $1 empty
+
+	 >>> ${1:-"$USER"}
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+### Assign default to parameter if empty
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Same as above; also assigns word to param
+
+-> Cannot assign (positional | special_params) this way
+
+	 >>> ${parameter:=word}
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+### Exit script w/ error code &>> on empty
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+-> if empty; exit 1, send contents of word to stderr
+
+	 >>> ${parameter:?word}
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+### Substitues value of word for parameter if NOT empty
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-> Substitution does not change the value of parameter
+
+	-> If param=empty, expansion results in nothing
+
+	 >>> ${parameter:+word}
+
+
+===============================================================================
+
+## Expansions to Return Variable Names
+
+------------------------------------------
+
+-> Identical operation for both forms
+
+	 >>> ${!prefix*}
+	 >>> ${!prefix@}
+
+
+===============================================================================
+
+## String Operations
+
+----------------------
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+### Get length of string assigned to parameter 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Regular String
+
+	 >>> ${#parameter}
+
+
+-> If parameter is either ( @ | * ); returns num-pos-params
+	
+	 >>> Equivalent to: len(param-list)
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+### Index Slicing 
+~~~~~~~~~~~~~~~~~~
+-> Begins at offset chars from the start, and continues to the end
+
+	-> Unless length is specified (index slicing)
+
+	 >>> ${parameter:offset}
+
+	 >>> ${parameter:offset:length}
+
+
+-> Reverse index can be done as well by adding the minus sign
+
+	-> A space must precede the offset to prevent shell confusion 
+
+	 >>> ${parameter: -offset:length}
+
+
+-> If parameter=[ @ ], expansion result:
+
+	-> 'length' positional params, starting at 'offset'
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+### Head Slicing
+~~~~~~~~~~~~~~~~~
+
+-> [ # ] removes shortest match
+
+	 >>> ${parameter#pattern}
+
+-> [ ## ] removes longest match
+
+	 >>> ${parameter##pattern}
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+### Tail Slicing
+~~~~~~~~~~~~~~~~~
+
+-> [ % ] removes shortest match
+	 
+	 >>> ${parameter%pattern}
+
+-> [ %% ] removes longest match
+
+	 >>> ${parameter%%pattern}
+
+
+===============================================================================
+
+## Search and Replace
+
+------------------------
+
+-> In all 4 forms, /string may be omitted
+
+	-> Any text matched by pattern is then deleted
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+-> [ / ] form only first occurance of pattern is replaced
+
+	 >>> ${parameter/pattern/string}
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+-> [ // ] form, all occurances are replaced
+
+	 >>> ${parameter//pattern/string}
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+-> [ /# ] requires match occurance at beginning of string
+	
+	 >>> ${parameter/#pattern/string}
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+-> [ /% ] requires match occurance at end of string
+
+	 >>> ${parameter/%pattern/string}
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+===============================================================================
+
+## Case Conversion 
+
+------------------------
+
+-> BASH has 6 methods which support converting between (upper|lower)case
+
+	-> 2: 'declare' command options	
+
+	-> 4: parameter expansions options
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+=====================================================
+  DECLARATION  | RESULT
+---------------|------------------------------------
+  delcare -u   | Normalize [ UPPERCASE ]
+---------------|------------------------------------
+  declare -l   | Normalize [ lowercase ]
+=====================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+-> 'single_quote' patterns proper regex interpretation
+
+==============================================================================
+         FORMAT          | RESULT (Expand the value of parameter...)
+-------------------------|----------------------------------------------------
+                         | Into all lowercase. 'pattern' is an optional shell
+  ${parameter,,pattern}  | pattern (ex. [A-F]) that will limit which chars
+                         | are converted. See bash man page for more details
+-------------------------|----------------------------------------------------
+  ${parameter,pattern}   | Changing only the first character to lowercase
+-------------------------|----------------------------------------------------
+  ${parameter^^pattern}  | Into all uppercase letters 
+-------------------------|----------------------------------------------------
+  ${parameter^pattern}   | Change only first character upper (Capitalization)
+==============================================================================
+
+
+===============================================================================
+
+# Arithmetic Evaluation and Expansion
+
+---------------------------------------
+
+-> Related to (( )), which is used for arithmetic truth eval(tests)
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+## Basic Arithmetic Expansion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Basic Syntax
+
+	-> Where expression=valid_arithmetic_exp
+
+	 >>> $((expression))
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+## Number Bases
+~~~~~~~~~~~~~~~~~
+
+===============================================================
+   NOTATION   | DESCRIPTION
+--------------|----------------------------------------------
+   number     | By default, numbers w/o any notation are 
+              | treated as decimal (base 10) integers
+--------------|----------------------------------------------
+   0number    | In arithmetic-expansion, numbers with a
+              | leading zero are considered octal
+--------------|----------------------------------------------
+   0xnumber   | Hexadecimal notation
+--------------|----------------------------------------------
+  base#number | 'number' is in 'base'
+===============================================================
+
+-> echo largest 2-digit hex number (ff)
+
+	 >>> echo $((0xff))
+
+-> echo largest 8-digit binary (base 2) number
+
+	 >>> echo $((2#11111111))
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+## Unary Operators
+~~~~~~~~~~~~~~~~~~~~
+-> [ + ] indicates positive number
+
+-> [ - ] indicates negative number
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+## Simple Arithmetic
+~~~~~~~~~~~~~~~~~~~~~~
+==================================
+ OPERATOR | DESCRIPTION
+----------|---------------------
+     +    | Addition
+----------|---------------------
+     -    | Subtraction
+----------|---------------------
+     *    | Multiplication
+----------|---------------------
+     /    | Integer Division
+----------|---------------------
+    **    | Exponentiation
+----------|---------------------
+     %    | Modulo(remainder)
+==================================
+    
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+## Assignment
+~~~~~~~~~~~~~~
+-> Consider the following commands
+
+	 >>> foo=
+	 >>> echo $foo
+	 >>> if (( foo = 5 )); then
+	 >>> 	echo "Tis True";
+	 >>> fi
+	 >>> echo $foo
+
+-> There are many assignment operators to chose from
+=================================================================
+   NOTATION     | DESCRIPTION
+----------------|-----------------------------------------------
+  param = val   | Simple assignment. Assigns value to param
+----------------|-----------------------------------------------
+  param += val  | Addition: (param = param + val)
+----------------|-----------------------------------------------
+  param -= val  | Subtraction: (param = param - val)
+----------------|-----------------------------------------------
+  param *= val  | Multiplication: (param = param * val)
+----------------|-----------------------------------------------
+  param /= val  | Integer Division: (param = param / val)
+----------------|-----------------------------------------------
+  param %= val  | Modulo: (param = param % val)
+----------------|-----------------------------------------------
+	C-STYLE		| (IN|DE)CREMENT 
+----------------|-----------------------------------------------
+    param++     | post-increment: param+=1: after var returned
+----------------|-----------------------------------------------
+    param--     | post-decrement: param-=1: after var returned
+----------------|-----------------------------------------------
+   ++param      | pre-increment: param+=1: before var returned
+----------------|-----------------------------------------------
+   --param      | pre-decrement: param-=1: before var returned
+=================================================================
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+## Bit Operations
+~~~~~~~~~~~~~~~~~~
+
+======================================================================
+ OPERATOR | DESCRIPTION
+----------|----------------------------------------------------------
+    ~     | Bitwise Negation. Negate all bits in a number
+----------|----------------------------------------------------------
+    <<    | Left Bitwise Shift. Shift all bits in a num left
+----------|----------------------------------------------------------
+    >>    | Right Bitwise Shift. Shift all bits in a num right
+----------|----------------------------------------------------------
+    &     | bw AND. Perform AND op on all the bits in 2 numbers
+----------|----------------------------------------------------------
+    |     | bw OR. Perform OR op on all the bits in 2 numbers
+----------|----------------------------------------------------------
+    ^     | bw XOR. Perform XOR op on all the bits in 2 numbers
+----------|----------------------------------------------------------
+  {op}=   | All bitwise operations have corresponding assignment ops
+======================================================================
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+## Logic Operations
+~~~~~~~~~~~~~~~~~~~~
+-> For use within (( compound_cmd )) notation
+
+	-> n=0 evaluates false
+	-> n!=0 evaluates true
+
+	
+
+======================================================================
+ OPERATOR | DESCRIPTION
+----------|----------------------------------------------------------
+    <=    | Less than or equal to
+----------|----------------------------------------------------------
+    >=    | Greater than or equal to 
+----------|----------------------------------------------------------
+    <     | Less than
+----------|----------------------------------------------------------
+    >     | Greater than
+----------|----------------------------------------------------------
+    ==    | Equal to
+----------|----------------------------------------------------------
+    !=    | Not equal to
+----------|----------------------------------------------------------
+    &&    | Logical AND
+----------|----------------------------------------------------------
+    ||    | Logical OR
+----------|----------------------------------------------------------
+ n1?n2:n3 | Comparison (ternary) operator. (if/else/then)
+          | if 'n1' evals non-zero (arithmetic true), 'n2'; else 'n3'
+======================================================================
+
+-> Assignment within ternary operators is odd, proper example below
+
+	 >>> a=0
+	 >>> ((a<1?(a+=1):(a-=1)))
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+## bc
+~~~~~~~~
+* man bc
+
+* See example script pg.517
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-> bc is an arbitrary precision calculator language
+
+	-> Typically fed values from a *.bc script
+
+	-> Interactive is also available w/ "bc -q"
+
+-> A basic 'foo.bc' example below
+
+	 >>> /* Simple bc script */
+	 >>> 2 + 2
+
+-> Then from the command line call one of the following
+
+	-> Pass positional parameter
+
+	 >>> bc foo.bc
+
+	-> Pass standard input
+
+	 >>> bc < foo.bc
+
+	-> Pass here doc
+
+	 >>> bc <<< "2+2"
+	
+	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

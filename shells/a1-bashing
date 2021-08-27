@@ -1,0 +1,787 @@
+---------------------------------------------------------------
+---------------------------------------------------------------
+
+			 --- The Linux Command Line ---
+				 - William Schotts -
+
+---------------------------------------------------------------
+---------------------------------------------------------------
+
+=========================================================================
+--------------------------------------------------------------------
+
+-> General command structure is as follows:
+
+	<COMMAND> <-OPTIONS> <--LONG-OPTIONS> <ARGUMENTS>
+
+--------------------------------------------------------------------
+
+-> man bash 	 		- bash man pages
+-> man something.conf	- get config man pages
+-> man bash; /progname	- search in all native bash programs
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-1 - Basic Shelling(pg.26)
+-----------------------------------
+
+-> tmux		 	- terminal multiplexer
+-> date		 	- returns iso-format datetime
+-> cal		 	- returns calendar with current date
+-> df		 	- displays current amount of free space on disk drives
+-> free		 	- displays the amount of free memory system has
+-> exit		 	- ends a terminal session (Ctrl-d also works)
+-> Alt-(F1-F6)	- cycle through shell windows
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-2 - Navigation(pg.31)
+--------------------------------
+
+-> pwd		 	- print name of current working directory
+-> cd		 	- change directory
+-> ls		 	- list directory contents
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-3 - Exploring the System(pg.37)
+------------------------------------------
+
+-> file		 	- determine file type
+-> less		 	- view file contents in paged context
+-> lpr		 	- off line print
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-4 - Manipulating Files and Directories(pg.49)
+--------------------------------------------------------
+
+-> cp		 	- copy files and directories
+-> mv		 	- move/rename files and directories
+-> mkdir	 	- create directories
+-> rm		 	- remove files and directories
+-> ln		 	- create hard and symbolic links(-s)
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-5 - Working with Commands(pg.66)
+-------------------------------------------
+
+-> type		 	- indicate how a command name is interpreted
+-> which	 	- display which executable program will be executed
+-> help		 	- get help for shell builtins
+-> man		 	- display a command's manual page
+-> apropos	 	- display a list of appropriate commands
+-> info		 	- display a command's info entry
+-> whatis	 	- display one-line manual page descriptions
+-> alias	 	- create an alias for a command[TLCL-pg74]
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-6 - Redirection(pg.78)
+---------------------------------
+
+- Create( >, < )
+- Append( >>, << )
+- stdout|stderr( &>, &>> )
+- Pipelines( cmd1 | cmd2 | ... )
+
+# flush noise to /dev/null bitbucket
+
+-> cat		 	- concatenate files
+-> sort		 	- sort lines of text
+-> uniq		 	- report or omit repeated lines
+-> grep		 	- print lines matching a pattern
+-> wc		 	- print newline, word, and byte counts for each file
+-> head		 	- output the first part of a file
+-> tail		 	- output the last part of a file
+-> tee		 	- read from standard input and write to standard output and files
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-7 - See the World as the Shell Sees It(pg.92)
+--------------------------------------------------------
+
+-> echo		 	- display a line of text
+-> env echo	 	- preffered usage
+
+-> * ex *	 	- file $(ls -d /usr/bin/* | grep zip)
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-8 - Heavy Keyboard Wizardry(pg.105)
+---------------------------------------------
+
+-> clear	 	- clear the screen
+-> history	 	- display the contents of the history list
+-> sleep	 	- timed delay (arcane busy wait loops?)
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-9 - Permissions(pg.114)
+----------------------------------
+
+-------------------
+> GET MANPAGES FOR
+-------------------
+>>> useradd
+>>> groupadd
+>>> visudo
+-------------
+
+-> adduser	 	- add a user or group to the system
+-> deluser	 	- remove a group or user from the system
+-> id		 	- display user identity
+-> chmod	 	- change a files mode
+-> umask	 	- set the default file permissions
+-> su		 	- run a shell as another user
+-> sudo		 	- execute a command as another user
+-> chown	 	- change a files owner
+-> chgrp	 	- change a file groups ownership
+-> passwd	 	- change a users password
+-> chfn		 	- change real username and information
+
+-> w		 	- show who is logged on and what they are doing
+-> man utmp	 	- man pages on userlogging
+-> who		 	- show all users that are currently logged on
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-10 - Processes(pg.134)
+---------------------------------
+
+-> ps		 	- report a snapshot of current processes
+-> top		 	- display tasks
+-> jobs		 	- list active jobs
+-> bg		 	- place a job in the background
+-> fg		 	- place a job in the foreground
+-> kill		 	- send a signal to a process
+-> killall	 	- kill processes by name
+-> pkill		- look up/signal processes by name || other_attrs
+-> shutdown	 	- shutdown or reboot the system
+-> xlogo	 	- sample testing window
+------------------
+-> pstree	 	- forest process tree (parent/child processes)
+-> vmstat	 	- System resource usage. See man-pages
+-> xload	 	- Graphical program for plotting system-load vs. time (Ctrl-C: exit)
+-> tload	 	- Similar to xload, but in the terminal. (Ctrl-C: exit)
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-11 - The Environment(pg.152)
+---------------------------------------
+
+-> printenv	 	- print part or all of the environment
+-> set		 	- set shell options
+-> export	 	- export environment to subsequently executed programs
+-> alias	 	- create an alias for a command
+-> source	 	- execute cmds from a file in the current shell
+------------------
+*-> SOURCE USE	- "source ~/.bashrc"
+*-> INVOCATION	- man bash covers startup files in detail
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-12 - Introduction to VIM(pg.165)
+-------------------------------------------
+
+	> go-to > ~/linux-*/basic-vim
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-13 - Customizing the Prompt(pg.186)
+----------------------------------------------
+
+	> go-to > The Linux Command Line chapter13
+
+-> vim ~/.bashrc; 
+	-> (PS1="xyz")
+	-> export ~/.bashrc 
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-14 - Package Management(pg.196)
+------------------------------------------
+	> go-to > ~/linux-*/basic-packages
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-15 - Storage Media(pg.206)
+-------------------------------------
+
+-> stat		 	- display file or filesystem status
+-> df 		 	- report file system disk space usage
+-> mount 	 	- mount a file system
+-> umount	 	- unmount a file system
+-> fsck		 	- check and repair file system
+-> fdisk	 	- manipulate disk partition table
+-> gdisk	 	- manipulate disk partition table (GDT)
+-> mkfs		 	- create a file system
+-> dd		 	- copy raw block formats from diskA >> diskB
+-> genisoimage	- create an ISO-9660 image file
+-> wodim	 	- write data to optical storage media
+-> md5sum	 	- calculate MD5 checksum
+
+
+=========================================================================
+--------------------------------------------------------------------
+# CHAPTER-16 - Networking(pg.225)
+----------------------------------
+
+-> netstat 	 - print:
+				> network_connections
+				> routing_tables
+				> interface_statistics
+		   		> masquerade_connections 
+				> multicast_memberships
+
+-> ip		 	- maange: routing, device, policy_routing, tunnels
+-> nmap 	 	- network exploration tool and security/port scanner
+-> ss		 	- another utility to investigate sockets
+
+-> lsof		 	- list open files
+-> ping 	 	- send <ICMP ECHO_REQUEST> to network hosts
+-> traceroute	- Print the route packets trace to a network host
+-> ftp		 	- internet file transfer program
+-> wget 	 	- non-interactive network downloader
+
+-> ssh		 	- OpenSSH SSH client (remote client)
+-> sshd		 	- OpenSSH SSH Server (remote host)
+-> ssh-keygen	- secure key generator for storing login authorization
+-> sftp		 	- protocol for secure file transfers
+-> rsync	 	- protocol for secure file transfers
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-17 - Searching For Files(pg.241)
+------------------------------------------
+
+-> find		 	- search for files in a directory hierarchy
+-> locate 	 	- find files by name
+-> mlocate 	 	- another file finder
+-> updatedb	 	- update a database for (m)locate
+-> xargs	 	- build and execute command lines from standard input
+-> touch	 	- change file 
+-> stat		 	- display file or system status
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-18 - Archiving And Backups(pg.258)
+--------------------------------------------
+# COMPRESSION
+--------------
+-> gzip		 	- compress or expand files
+-> gunzip	 	- expand compressed files
+-> zcat		 	- cat, but for compressed files
+-> zless	 	- less, but for compressed files
+---------
+-> bzip2	 	- a block sorting file compressor
+-> bunzip2	 	- inverts the bzip2 compression
+-> bzcat	 	- decompress .bz2 files to stdout
+-> bzip2recover	- recovers data from damaged bzip2 files
+------------
+# ARCHIVING
+------------
+-> tar		 	- tape archiving utility
+-> zip		 	- package and compress files
+------------
+# FILE SYNC
+------------
+-> rsync 	 	- remote file and directory syncronization
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-19 - Regular Expressions(pg.275)
+-------------------------------------------
+
+-> grep 	 	- global regular expressions
+
+-> wamerican	- populate "/usr/share/dict" directory
+		   		* Available: [ -small | -huge | -insane ]
+				* grep: [ from-dict | comparisions-against-dict ]
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-20 - Text Processing(pg.297)
+---------------------------------------
+
+-> cat		 	- concatenate files and print on the standard input 
+-> sort		 	- sort lines of text files
+-> uniq		 	- report or omit repeated lines
+-> cut		 	- remove sections from each line of files
+-> paste	 	- merge lines of files
+-> join		 	- join lines of two files on a common field
+-> comm		 	- compare two sorted files line by line
+-> diff		 	- compare files line by line
+-> patch 	 	- apply a diff file to an original
+-> tr		 	- translate or delete characters
+-> sed 		 	- stream editoor for filtering and transforming text
+-> aspell	 	- interactive spell checker
+
+-> unix2dos	 	- easy way of converting (cariage vs newline) 
+-> dos2unix	 	- same as above just the inverse
+-> expand	 	- convert tabs into spaces
+-> unexpand	 	- convert spaces into tabs
+-> awk		 	- pattern scanning and processing language
+-> perl		 	- Perl 5 language interpreter
+-> split	 	- split files into pieces
+-> csplit	 	- split files into pieces based on context
+-> sdiff	 	- side-by-side merge of file difference
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-21 - Formatting Output(pg.339)
+-----------------------------------------
+
+-> nl 		 	- number lines
+-> fold		 	- wrap each line to a specified length
+-> fmt		 	- a simple text formatter
+-> pr		 	- prepare text for printing
+-> printf	 	- format and print data
+-> groff	 	- a document formatting system
+-> troff	 	- troff processor of the groff formatting system
+-> eqn		 	- format tables for troff
+-> tbl		 	- format equations for troff or MathML
+-> texlive	 	- used for TEX (typesetter)
+-> ps2dpf	 	- convert postscript files into pdf files
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-22 - Printing(pg.361)
+--------------------------------
+
+# configure printer hardware first
+
+-> pr		 	- convert text files for printing
+-> lpr		 	- print files
+-> a2ps		 	- format files for printing on a PostScript printer
+-> lpstat	 	- show printer status information
+-> lpq		 	- show printer queue status
+-> lprm		 	- cancel printer jobs
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-23 - Compiling Software(pg.374)
+-------------------------------------------
+
+-> make		 			- GNU make utility; maintain groups of programs
+-> gcc		 			- GNU project C and C++ 
+
+>> ./configure
+>> make
+>> sudo make install
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-24 - Basic Scripting(pg.388)
+----------------------------------------
+
+-> #!/bin/bash					- header for all bash scripts
+-> chmod 755 script				- modifies permissions to allow executables
+-> ./<script>					- invoke script from cwd ignoring path
+
+------------------------------
+# script locations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> ~/bin	 					- ( auth:( cur-user ) 	| user: ( cur )
+-> /usr/local/bin				- ( auth:( user|admin ) | user: ( all )
+-> /usr/local/sbin				- ( auth:( admin ) 		| user: ( admin )
+-> /usr/local					- ( auth:( user|vend ) 	| user: ( all )
+
+------------------------------
+# New User/System
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> mkdir ~/bin					- create user-script directory if !exist
+
+### if PATH variable !(autogen)
+-> export PATH=~/bin:"$PATH"	- creates PATH reference to ~/bin directory
+
+-> source ~/.bashrc				- applies .bashrc changes to current session
+-> . ~/.bashrc					- same as above; different syntax
+-> logout/login					- same as above; reloads .bashrc w/ changes
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-25 - Starting a Project(pg.395)
+------------------------------------------
+
+-> sys_info_page				- user-script generates sys-usage report
+
+-> declare -r TITLE="Title"		- create read-only immutable variable
+
+-> <pre>$(df -h)</pre>			- <pre> tags preserve command formatting
+
+--------------------
+# here documents
+~~~~~~~~~~~~~~~~~~~~
+-> command << token 			- command: cmd name that accepts stdin
+>> text							- embedded text 
+>> token						- token(str): used to indicate end-of-text
+
+-> command <<- token			- <<- ignores leading tabs to allow indents
+>> 		text
+>> 		_EOF_
+
+--------------------
+# here string 
+~~~~~~~~~~~~~~~~~~~~
+-> assign cmd vars <<< "$i"		- here string mitigates subshell deletion 
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-26 - Top-Down Design(pg.407)
+---------------------------------------
+
+-> local 						- assign vars locally within a function
+-> .bashrc:+(shell_func)		- preferred way of creating aliases
+
+-> function name {				- traditional function syntax
+>> 		commands
+>>		return
+>> }
+
+-> name () {					- revised function syntax
+>> 		commands
+>>		return
+>> }
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-27 - Flow Control[ IF ](pg.417)
+----------------------------------------------
+
+~~~~~~~~~~~~~~~~~~~~~~~
+-> if commands; then			- if statement syntax
+>> 		commands
+>> elif commands; then
+>>		commands
+>> else
+>>		commands
+>> fi
+
+-------------------------
+# Boolean Values
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-> true							- always exits with status 0
+-> false						- always exits with status 1
+
+-------------------------
+# standard 'test' 
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-> test expression				- test options: ~/*/*/basic-tests 
+>> if [ expression ]; then		- if [ -e "$FILE" ]; then
+
+-------------------------
+# Modern 'test'
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-> if [[ expression ]]; then	- expression evals true/false
+-> [[ str1 =~ ^-?[0-9]+$ ]]		- regex feature !available in std test
+-> [[ "$FILE" == FOO.* ]]		- Pattern matching = Pathname Expansion
+
+-------------------------
+# Arithmetic Truth Tests
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-> ((1)) || ((0))				- evals: ( true || false )
+-> ((INT > 0))					- eval: ( if [ int -gt 0 ]... )
+-> (( ((INT	% 2)) == 0 ))		- modulo check if number is even
+
+----------------------------
+# Combining Expressions 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ops | test | [[ ]] & (( ))
+-----|------|---------------  
+ AND |  -a  |     &&
+-----|------|---------------  
+ OR  |  -o  | 	  ||
+-----|------|---------------  
+ NOT |  !   |     !
+----------------------------  
+
+-> [[ ! (exp1 && exp2) ]]		- negation syntax
+
+-> if [[ \						- compound conditional syntax
+	>> exp1 && exp2
+	>> exp1 -a exp2
+	>> exp1 || exp2
+	>> exp1 -o exp2
+>> ]]; then...
+
+----------------------------
+# Control Operators  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> command1 && command2			- cmd2 executes ONLY IF cmd1 succeeds
+-> command1 || command2			- cmd2 executes ONLY IF cmd1 fails
+
+-> mkdir iot && cd iot			- if mkdir iot success; cd iot; else pass
+-> [[ -d iot ]] || mkdir iot	- if iot !exist; mkdir iot; else pass
+-> [[ -d iot ]] || exit 1 		- if iot !exist; exit w/ error status 1
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-28 - Reaing Keyboard Input (pg.434)
+----------------------------------------------
+
+-> read	[-options] [var...]		- read from stdin and assign to vars
+-> IFS							- word split delimiter: (\s|\t||n)
+								- IFS=":" read user vars... <<< "$file_info"
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-29 - Flow Control[ WHILE | UNTIL ](pg.447)
+-----------------------------------------------------
+
+-> while commands; 				- while syntax
+>> 		do commands; 
+>> done
+
+-> until commands;				- until syntax
+>> 		do commands
+>> done
+
+-> while true; do 				- infinite loop w/ manual flow	
+	-> continue	 				- inner loop flow control 
+	-> break					- inner loop flow control
+
+
+-> while [[ "$REPLY" != 0 ]];	- usage with tests
+
+-> exit			- (formality)
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-30 - Troubleshooting(pg.454)
+---------------------------------------
+
+# Missing Quotes
+# (Missing|Unexpected) Tokens
+# Unanticipated Expansions
+# Filename Wizardry 
+
+-> #!/bin/bash -x 				- set trace script-wide
+
+-> export PS4-"$LINENO + "		- add numbering to traces
+
+-> set -x						- trace-on
+>> cmds							- traced commands
+-> set +x						- trace-off
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-31 - Flow Control[ case ](pg.468)
+--------------------------------------------
+
+-> case word in
+>> [pattern [| pattern]...) commands ;; ]...
+>> esac
+
+-> ;;&							- allows multiple case test matches
+
+-> case "$REPLY" in			- case matches if;
+>>
+>>			a ) 			- if REPLY equals 'a'
+>>				cmd0			
+>>	   	   	 	;;
+>>			[[:alpha:]] )	- if REPLY equals single alpha char
+>>				cmd1
+>>	   	   	 	;;
+>>			??? ) 	 		- if REPLY is exactly 3 chars long
+>>				cmd2
+>>	   	   	 	;;
+>>			*.txt ) 		- if REPLY ends with '.txt' 
+>>				cmd3
+>>	   	   	 	;;
+>>			*) 	 			- Matches ANY. Catches invalid entries
+>>				cmd4
+>>	   	   	 	;;
+>> esac							- exits case
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-32 - Positional Parameters(pg.475)
+----------------------------------------------
+
+-> $0							- always scripts filename to root
+-> $1-$9						- positional params from indices[1-9]
+-> ${11}|${101}|etc				- for greater than 9 positional parameters
+-> $#							- num of arguments on the command line
+-> $*							- combines all positional params into one string
+-> $@							- preserves arguments passed in (PREFERRED)
+
+-> shift						- ($3 -> $2) > ($2 -> $1) > ($1 -> consume)
+								- shifts pos. args down one variable index
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-33 - Flow Control[ FOR ](pg.490)
+-----------------------------------------------------
+
+-> for var [in words]; do		- standard syntax
+>> 		commands
+>> done
+
+
+-> for (i=0; i<5; i=i+1); do	- C-style syntax
+>> 		commands
+>> done
+
+-> for user_in; do				- omit word list; iterates over pos. args
+>> 		commands
+>> done
+
+-> exit							- (formality)
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-34 - Strings and Numbers (pg.497)
+--------------------------------------------
+
+-> time						- display execution time stats for given program
+-> strings					- generate liste text 'words' from file
+
+>> see-file >>				- ~/lin*/bourne-again/strings-numbers.txt
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-35 - Arrays (pg.519)
+-------------------------------
+
+-> readarray				- read lines from a file into an array variable
+							- readarray var < <(ls -l)
+
+
+
+=========================================================================
+--------------------------------------------------------------------
+* CHAPTER-35 - Exotics (pg.529)
+---------------------------------
+
+- - - - - - - - - - - - 
+# Groups & Subshells
+- - - - - - - - - - - - 
+
+-> { cmd1; cmd2; [cmd3; ...] }			- group command (preferred)
+										- executes in current shell
+
+-> (cmd1; cmd2; [cmd3;...])				- subshell syntax
+										- vars destoryed when subshell terminates
+
+- - - - - - - - - - - - 
+# Process Substitution
+- - - - - - - - - - - - 
+
+->     <(list)							- processes that produce standard input 
+->     >(list)							- processes that produce standard output
+
+	 >>> read < <(echo "foo") 			- var ! destroyed on termination
+	 >>> echo "$REPLY"
+
+
+- - - - - - - - - - - - 
+# Traps
+- - - - - - - - - - - - 
+
+-> trap argument sig [sig...]			- graceful interrupt/termination
+
+-> find -type f -name trap-sigs			- (example script)
+
+
+- - - - - - - - - - - - 
+# Temporary Files
+- - - - - - - - - - - - 
+
+-> /tmp/$(basename $0).$$.$RANDOM		- limited int range
+
+-> $(mktemp /tmp/foos.$$.X[X...])		- X=rand.([:aLnUm:]) (preferred)
+
+-> [ -d "$HOME/tmp" ] \					- for non shareable user /tmp dirs
+		|| mkdir $HOME/tmp	
+
+
+- - - - - - - - - - - - 
+# Async Execution
+- - - - - - - - - - - - 
+
+-> coproc								- executed async in a subshell
+-> wait									- shell async keyword
+
+	 >>> child_process &
+	 >>> pid=$!
+
+	 >>> _execute_parent_body_
+
+	 >>> wait "$pid"
+	 >>> exit
+
+
+- - - - - - - - - - - - 
+# Named Pipes
+- - - - - - - - - - - - 
+
+-> process1 > named_pipe				- supply: load pipe w/ data, wait for discharge
+-> process2 < named_pipe				- discharge: attach process to 'unblock' pipe
+>> process1 | process2					- The 2 above will behave just like this  
+
+-> mkfifo								- create named-pipe (file attr gets 'p' prefix)
+
+-> ls -l > new_pipe_1					- 'fill' pipe ( appears to hang, but pipes just 'blocked' )
+-> cat < new_pipe_1						- 'drain' pipe ( 'unblocks' pipe, loader then terminates )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

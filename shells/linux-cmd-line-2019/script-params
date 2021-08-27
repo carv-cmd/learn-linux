@@ -1,0 +1,128 @@
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+            ------------- Parameters ---------------
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+
+============================================================================
+
+#  Positional Parameters
+
+------------------------------------------------------------------------
+
+-> Similar to Python positional parameters
+
+-> To see these parameters use the following variables
+
+	-> [ \$0, \$1, \$2, \$3, etc ]
+
+	-> \$0 is assigned to the caller so indexing is from [ 1 -> n ]
+
+-> More than 0-9 are accesible by using parameter expansion
+
+	-> Example: [ ${55}, ${211}, ${1024}, ${etc} ] 
+
+-> Determine the number of command line arguments with [ $# ]
+
+------------------------------------------------------------------------
+
+> shift - Getting Access to Many Arguments
+
+-> Say we feed a large number of arguments to the input
+
+	-> Such as a wildcard in a directory	
+
+	 >>> posit-param $(ls ~/*)
+
+-> shift does the following when executed:
+
+	-> [ ($3 -> $2) | ($2 -> $1) | ($1 -> consumed) ]
+
+	-> Aditionally, dollar-hash is reduced by 1 [ $# - 1 ]
+
+------------------------------------------------------------------------
+
+-> Positional params can also be passed to shell functions
+
+	 >>> #!/bin/bash
+	 >>>
+	 >>> file_info () {
+	 >>> 	commands
+	 >>> }
+	 >>>
+	 >>> file_info $1
+
+------------------------------------------------------------------------
+
+-> Handling Positional Parameters 'en Masse'
+
+-> [ @* and $@ ] are special parameters for grouping positional arguments
+
+	-> Good for making wrappers and such
+
+==================================================================
+ PARAMETER | DESCRIPTION
+------------------------------------------------------------------
+           | Expands into the list of positional arguments(st=1)
+           | When double qouted, "$*"; it expands into double 
+    $*     | quoted str w/ all the pos. arguments each separated 
+           | by the first char of the IFS shell variable
+           | (by default a space character)
+-----------|------------------------------------------------------
+           | Expands into the list of positional arguments(st=1)
+    $@     | When double quoted, "$@" expands each pos. argument
+           | into separate words as if it was double quoted.
+------------------------------------------------------------------
+
+-> Point is the ideal special param combo to use is [ "$@" ]
+ 
+	-> This preserves integrity of the positional arguments
+
+	-> Also ensures safety against hosing important objects
+
+-> In addition to the methods above bash offers another param handler
+
+	-> getopts: see bash man page for details
+
+============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

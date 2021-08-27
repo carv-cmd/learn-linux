@@ -1,0 +1,159 @@
+################################################################
+
+          ----- Users & Groups Admintration -----
+
+################################################################
+
+-> Essentially there are 2 types of users and groups
+
+	-> Normal(non-system): these are human users; able to login to these accounts
+
+	-> System: these are reserved for things such as system services; no-login
+
+
+=======================================================================
+
+# Add Users (adduser)
+
+-> See `man adduser` for additional details on the options provided
+
+	 >>> man adduser
+
+
+-> Begin by creating a user with [ adduser ]
+
+	 >>> sudo adduser -gecos "Users Name" username
+
+
+-> You will be prompted for a password after this (or finger info)
+
+	-> This step is optional due to the following
+
+
+-> To change that users password, call passwd as root and follow prompt
+
+	 >>> sudo passwd username
+
+
+-> To examine the properties of this new user, id them
+
+	 >>> id username
+
+=======================================================================
+
+# Add Groups (addgroup)
+
+-> See `man addgroup` for additional details on the options provided
+
+	 >>> man addgroup
+
+
+-> Begin by adding a group named 'research'
+
+	 >>> addgroup research
+
+
+-> To add a system group, include the --system option
+
+	 >>> addgroup --system nas-server
+
+
+=======================================================================
+
+# Modify Users (usermod)
+
+-> See `man usermod` for complete list of options
+
+	 >>> man usermod
+
+-> Change a users UID with the -u option 
+
+	 >>> sudo usermod -u 1600 jorjuela9801
+
+
+-> Or change the users primary GID with the -g option
+
+	 >>> sudo usermod -g 988 nas-server
+
+
+-> Or set an expiry date on the account
+
+	 >>> sudo usermod -g 420 nas-server -e 2021-12-01
+
+
+=======================================================================
+
+# Modify Groups (groupmod)
+
+-> See `man groupmod` for complete list of options
+
+	 >>> man groupmod
+
+
+-> Use 'groupmod -n' to change the name of 'nas' group to 'nas-server'
+
+	 >>> sudo groupmod -n nas-server nas
+
+
+-> Use the '-g' option to change the 'GID' of a group
+
+	 >>> sudo groupmod -g 420 nas-server
+
+
+=======================================================================
+
+# Deleting Users and Groups ( userdel | groupdel )
+
+-> To 'delete a user along with their home directory', use the '-r' option
+
+	 >>> sudo userdel -r susadmin
+
+
+-> To 'delete a group' its just the command and group name
+
+	 >>> sudo groupdel research
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

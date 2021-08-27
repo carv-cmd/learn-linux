@@ -1,0 +1,296 @@
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+     ----------- Creating a Shell Program ---------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+
+-> sys-report: compiles various sys-stats into single HTML document
+
+
+-----------------------------------------------------------------------------
+# Stage-1: Minimal Document (HTML template)
+
+
+	<html>
+		<head>
+			<title>Page Title<title>
+		</head>
+		<body>
+			Page Body
+		</body>
+	</html>
+
+
+-> The first stage of our program will output this HTML to stdout
+
+	 >>> vim ~/bin/sys_info_page
+
+
+-----------------------------------------------------------------------------
+# Stage-2: Adding Some Data 
+
+Variables & Constants
+----------------------------
+-> A few rules about variable names:
+
+	1). Varaible names may consist of alphanumeric characters + underscore_characters
+
+	2). The first character of a variable name must be either (letter|underscore)
+
+	3). Spaces + punctuation symbols are not allowed
+
+
+-> Just: title="A Title" is an example of a constant
+
+	-> A variable title would adapt to the current host
+
+	 >>> TITLE="System Information Report For $HOSTNAME"
+
+
+-> The case-convention is:
+
+	-> lowercase letters: variable variables
+
+	-> UPPERCASE letters: static variables
+
+
+-> Variables are 'initialized untyped' where final -> (value: string)
+
+	-> variable=value
+
+
+----------------------------------------------------------------------------------
+     EXPANSION        |  RESULT
+----------------------|-----------------------------------------------------------
+        a=z           | Assign the string "z" to variable 
+----------------------|-----------------------------------------------------------
+    b="a string"      | Embedded spaces must be within quotes
+----------------------|-----------------------------------------------------------
+  c="a string an $b"  | Other expansions (vars) can be expanded into assignment
+----------------------|-----------------------------------------------------------
+ d="$(ls -l foo.txt)" | Results of a command
+----------------------|-----------------------------------------------------------
+    e=$((5 * 7))      | Arithmetic expansion
+----------------------|-----------------------------------------------------------
+  f="\t\ta string\n"  | Escape sequences such as tabs and newlines
+----------------------|-----------------------------------------------------------
+   ab=5 bc="string"   | Multiple variable assignments can be done on single line
+----------------------------------------------------------------------------------
+
+
+-> During expansion, variable names may be surrounded with curlies {}
+
+	-> Useful where a variable anme becomes ambiguous due to the surrounding context
+
+
+-> A usage example is changing myfile -> myfile1
+
+	 >>> filename="myfile"
+
+	 >>> touch "$filename"
+
+	 >>> mv "$filename" "$filename1"
+
+
+-> Shell interprets 2nd argument as a new (& empty) variable and errors out;
+
+	-> Easy to overcome this effect with ${curly} braces
+
+	 >>> mv "$filename" "${filename}1"
+
+-----------------------------------------------------------------------------
+
+# 'here documents' | 'here script' (i/o redirection)
+
+
+-> Body of text is embeded into our script and feed into the stdin of a command
+
+	-> command << token
+
+	-> text
+
+	-> token
+
+
+-> Where: 
+
+	-> 'command' is the name of command
+
+	-> 'token' is a string used to indicate the end of the embedded text
+
+
+-> We modify the sys_info script to use a here_document like so;
+
+	>>> cat << _EOF_  # token
+		<html>... 	  # body
+
+		</html>...	  # body
+	>>> _EOF_		  # token
+		
+-> Overall, here-documents can be used with any command that accepts standard input
+
+-> bash man page includes a section ["HERE DOCUMENTS", for full feature description 
+
+
+-----------------------------------------------------------------------------
+
+# Top-Down-Design
+
+-> sys_info_page: TDD below:
+
+	1). Open page
+	
+	2). Open page header
+	
+	3). Set page title
+	
+	4). Close page header
+	
+	5). Open page body
+	
+	6). Output page heading
+	
+	7). Output timestamp
+	
+	8). Close page body
+	
+	9). Close page
+
+
+-> Were going to add some steps between 7 - 8
+
+	7a). System Uptime and Load:
+			
+			> Amount of time since last shutdown or reboot
+			> Average number of tasks currently running on the processor over several time intervals
+	
+	7b). Disk Space:
+			
+			> This is the overall use of space on the systems storage devices
+
+	7c). Home Space:
+			
+			> This is the amount of storage space being used by each user
+
+
+-> If we had a command for (7a|7b|7c) we could add them with simple substitution
+
+-> For example:
+	 >>> $(report_uptime)
+	 >>> $(report_disk_space)
+	 >>> $(report_home_space)
+
+-> Theres 2 ways to implement these in our scripts
+
+	-> The first is so stupid im ignoring it
+
+-> Were interested in "shell functions" which come in 2 flavors:
+
+-> Where 'name' is the name of the function
+
+-> & 'commands' is a series of commands contained within the function
+
+--------- FORMAL ---------
+
+	function name {
+		commands
+		return
+	}
+
+------- PREFFERED -------- 
+
+	name () {
+		commands
+		return
+	}
+
+------- EXAMPLE --------
+
+	get_temp () {
+		systmp
+		return
+	}
+
+-------------------------
+
+	report_uptime () {
+		cat <<- _EOF_
+			<h2>System Uptime</h2>
+			<pre>$(uptime)</pre>
+			_EOF_
+		return
+	}
+
+-----------------------------------------------------------------------------
+
+# Flow Control: Conditionals
+
+------------- SYNTAX ---------------
+
+	if commands; then
+		commands
+	
+	[elif commands; then
+		commands...]
+	
+	[else
+		commands]
+	
+	fi
+
+-------------------------------------
+
+-> Given:
+
+	if x = 5, 
+	
+		do this; 
+	
+	else x != 5, 
+		
+		do that;
+
+
+------------- EXAMPLE --------------
+
+	x=5
+
+	if [ "$x" -eq 5 ]: then
+		echo "x equals 5."
+
+	else
+		echo "x does not equal 5."
+	
+	fi	
+
+-------------------------------------
+
+
+-----------------------------------------------------------------------------
+
+# Exit Status
+
+-> Commands issue a value to the system when they terminate called an 'exit status'
+
+	-> Integer value between 0-255; inidcates success or failure of the cmds execution
+
+	-> Convention: ( 0 = success ) && ( !0 = failure )
+
+
+-> To view this status code we use the shell provided parameter: ( $? )
+
+	 >>> ls -d /usr/bin
+	 >>> echo $?
+
+	 >>> ls -d /bin/usr 
+	 >>> echo $?
+
+
+-> Theres 2 commands that do nothing except terminate with either ( 0|1 ) 
+
+	-> [0] true command always executes successfully
+
+	-> [1] false command always terminates unsuccessfully
+
+

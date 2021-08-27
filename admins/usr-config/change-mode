@@ -1,0 +1,162 @@
+########################################################################
+
+                 ----- Change Owner: `chmod` -----
+                 ----- Change Group: `chmod` -----
+                 ----- Change Mode:  `chmod` -----
+
+########################################################################
+
+-------------------------------------------------------------
+# Assigning Users/Groups to Resources
+# chown, chgrp
+-------------------------------------------------------------
+
+## Change Owner
+~~~~~~~~~~~~~~~
+-> Change file owner permissions
+
+	 >>> chown [ -R ] username filename
+
+-> chown allows for both owner.group to be assigned simultaneously
+
+	 >>> chown [ -R ] username.groupname filename
+
+## Change Group
+~~~~~~~~~~~~~~~
+-> Change file group owner permissions
+
+	 >>> chgrp [ -R ] groupname filename
+
+## Optional for Both Change [ Owner | Group ]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> If [ directory name ] + [ -R option ] is passed;
+
+	-> Recursively change all in directory to specified [ 'username' || 'groupname' ]
+
+
+----------------------------------------------------------------------------------
+-------------------------------------------------------------
+# Assigning Permissions to Users/Groups/Resources 
+# chmod
+-------------------------------------------------------------
+
+------------------------------
+## Basic Permission Structure
+===================================
+  LETTER  |  OCTAL  | PERMISSION
+==========|=========|=============
+    r     |    4    |  Read
+----------|---------|-----------
+    w     |    2    |  Write
+----------|---------|-----------
+    x     |    1    |  Execute
+===================================
+
+-------------------------
+## Octal Representations
+===========================================================
+  OCTAL  |  BINARY  | REPRESENTS | PERMISSIONS
+=========|==========|============|========================
+    0    |   000    |   - - -    | No Permissions
+---------|----------|------------|------------------------
+    1    |   001    |   - - x    | Execute Only
+---------|----------|------------|------------------------
+    2    |   010    |   - w -    | Write Only
+---------|----------|------------|------------------------
+    3    |   011    |   - w x    | Write & Execute
+---------|----------|------------|------------------------
+    4    |   100    |   r - -    | Read Only
+---------|----------|------------|------------------------
+    5    |   101    |   r - x    | Read & Execute
+---------|----------|------------|------------------------
+    6    |   110    |   r w -    | Read & Write
+---------|----------|------------|------------------------
+    7    |   111    |   r w x    | Read & Write & Execute
+============================================================
+
+------------------------
+## Common File Examples
+========================================================================
+    FILES     | OCTAL | DESCRIPTION
+==============|=======|=================================================
+  -rwx------  |  700  | Useful for local user scripts 
+--------------|-------|------------------------------------------------
+  -rwx--x--x  |  711  | Scripts others can run; cant read/copy (admin)
+--------------|-------|------------------------------------------------
+  -rwxr-xr-x  |  755  | Anyone can exe/read; mutable only for owner
+--------------|-------|------------------------------------------------
+  -rw-rw-rw-  |  666  | BAD PRACTICE: Anyone can access/modify
+--------------|-------|------------------------------------------------
+  -rwxrwxrwx  |  777  | BAD PRACTICE: Anyone can read/write/execute
+========================================================================
+
+-----------------------------
+## Common Directory Examples
+=============================================================================
+  DIRECTORY   | OCTAL | DESCRIPTION
+==============|=======|======================================================
+              |       |
+              |       | Default directory created with `mkdir` command.
+  drwx------  |  700  | Only [ owner ] can read/write into this directory.
+              |       | A directory must have the executable bit set for
+              |       | it to be traveseable [ drw(x)------ ]
+              |       |
+--------------|-------|-----------------------------------------------------
+              |       |
+              |       | Keep a directory world-readable, but restricted
+  drwx--x--x  |  711  | from access by the `ls` command. A file can still
+              |       | be read only by someone who knows the exact filename
+              |       |
+--------------|-------|-----------------------------------------------------
+              |       |
+  drwxr-xr-x  |  755  | This directory can be changed only by the owner,
+              |       | but everyone can view its contents 
+              |       |
+=============================================================================
+
+---------------------------
+# Symbolic Permission Bits
+=====================================
+  CHARS  |  DESCRIPTION
+---------|--------------------------
+    u    | User Permissions
+---------|--------------------------
+    g    | Group Permissions
+---------|--------------------------
+    0    | World Permissions
+---------|--------------------------
+    a    | Apply Permissions to All
+=================================================
+   OPS   |  DESCRIPTION
+---------|--------------------------------------
+    +    | Add Permission Bit from Current
+---------|--------------------------------------
+    -    | Subtract Permission Bit from Current
+---------|--------------------------------------
+    =    | Overwrite Current bit with new
+---------|--------------------------------------
+    ,    | Chain modifications
+=================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

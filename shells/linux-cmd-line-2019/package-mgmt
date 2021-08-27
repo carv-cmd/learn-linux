@@ -1,0 +1,80 @@
+
+----------------------------
+ --- Package Management --- 
+----------------------------
+
+  PACKAGING SYSTEM   |  DISTRIBUTIONS (PARTIAL)
+---------------------|-----------------------------------------------------
+ DebianStyle (.deb)  | Debian, Ubuntu, Linux, Mint, Raspbian  
+---------------------|-----------------------------------------------------
+ RedHatStyle (.rpm)  | Fedora, CentOS, Red Hat, Enterprise Linux, OpenSUSE
+---------------------|-----------------------------------------------------
+
+> PACKAGE TOOLS
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+------------------------
+>> HIGH-LEVEL 
+>>> Handle tasks such as installing and removing package files
+----------------------------------------------------------------------------
+Tools:
+---------------------
+-> Debian: " dpkg "
+
+-> Fedora: " rpm "
+---------------------
+
+------------------------
+>> LOW-LEVEL
+>>> Perform metadata searching and dependency resolution
+----------------------------------------------------------------------------
+Tools:
+------------------------------------------------
+-> Debian: " apt " , " apt-get " , " aptitude "
+
+-> Fedora: " yum " , " dnf "
+------------------------------------------------
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+-----------------------------
+> LISTING INSTALLED PACKAGES
+-----------------------------
+-> Debian: "dpkg -l"
+-> Red Hat: "rpm -qa"
+-----------------------------
+
+---------------------------------------------
+> DETERMINING WHETHER A PACKAGE IS INSTALLED
+---------------------------------------------
+-> Debian: " dpkg -s <package_name> "
+-> Red Hat: " dpkg -q <package_name> "
+---------------------------------------------
+
+-----------------------------------------------------
+> DISPLAYING INFORMATION ABOUT AN INSTALLED PACKAGE
+-----------------------------------------------------
+-> Debian: " apt-cache show <package_name> "
+-> Red Hat: " yum info <package_name> "
+-----------------------------------------------------
+
+-----------------------------------------------------
+> FINDING WHICH PACKAGE INSTALLED A FILE
+-----------------------------------------------------
+-> Debian: " dpkg -S <file_name> "
+-> Red Hat: " rpm -qf <file_name> "
+-----------------------------------------------------
+
+-------------------------------
+ -- DEV DIRECTORY STRUCTURE --
+-------------------------------
+
+-> /dev/df* 	- Floppy disk drives
+-> /dev/hd*	- IDE(PATA) disks on older systems
+-> /dev/lp* 	- Printers
+-> /dev/sd* 	- SCSI disks. Kernel treats all disk-like-drives like this 
+-> /dev/sr*	- Optical drives (CD\DVD readers and burners) 
+
+

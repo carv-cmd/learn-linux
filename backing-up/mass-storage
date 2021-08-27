@@ -1,0 +1,317 @@
+#################################################################
+
+                   ----- STORAGE MEDIA -----
+
+#################################################################
+
+=================================================================
+----------------------------------------------------------------
+# Filesystem & Mass Storage Management
+------------------------------------------
+
+->'mount' 		- Mount a filesystem
+
+->'umount' 		- Unmount a filesystem
+
+->'fsck' 		- Check and repair a filesystem
+
+->'fdisk' 		- Manipulate disk partition table
+
+->'gdisk'		- Manipulate GUID partition tables
+
+->'mkfs'		- Create a filesystem (depreceated)
+
+->'mke2fes'		- Create an ext/2/3/4 filesystem
+
+->'dd' 			- Convert and copy a file
+
+->'genisoimage' - Create an ISO 9660 image file
+
+->'wodim' 		- Write data to optical storage media
+
+->'md5sum'		- Calculate an MD5 checksum
+
+->'dmsetup'		- Low-level logical management
+
+->'kpartx'		- Create device maps from partition tables
+
+->'partx'		- Tell kernel about presence & numbering of on-disk partitions
+
+->'iostat'		- Report CPU & I/O stats for devices & partitions
+
+
+=================================================================
+----------------------------------------------------------------
+# Hot Swapping
+-----------------------
+
+->'udev'						- Dynamic device management
+->'udevadm'						- udev management tool
+
+->'multipath'					- Device mapper target autoconfig
+->'multipath -t'				- list current multipathd config file
+->'multipathd show config'		- same as above
+
+->'udev(7)'
+->'udev.conf(5)'
+->'systemd-udevd.service(8)'
+->'systemd-udevd(8)'
+->'udevadm(8)'
+->'multipath.conf(5)'
+
+->'/lib/udev/rules.d'			- system rules
+->'/usr/local/lib/udev/rules.d'	- system rules
+->'/run/udev/rules.d'			- volatile runtime memory
+->'/etc/udev/rules.d'			- local admin
+
+->'parallel'					- Syntax: 'parallel -j4 cp filename ::: destinations
+								- Quickly copy real data to multiple locations (testing)
+
+
+=================================================================
+----------------------------------------------------------------
+# [ /etc/fstab ] Breakdown 
+----------------------------------------
+
+
+-> "/etc/fstab" contains the list of devices that are to be mounted at boot time
+
+	-> Example entries below [ 6 fields described below ]
+
+		LABEL=writeable	 	/				ext4    defaults	0	0
+		LABEL=system-boot	/boot/firmware	vfat	defaults	0	1
+		LABEL=home			/home			ext4	defaults	1	2
+
+------------
+## Device:
+~~~~~~~~~~~~
+-> Due to hot swapping; many distros 'associate devices' with a 'text LABEL'
+
+	-> The label '(added to storage media on formatting)' can either be 'simple text' or a 'UUID'
+
+-> This label is 'whats read by the OS when a device is attached to the system'
+
+	-> Regardless of the device file assigned to a physical device, its still identifiable
+
+-----------------
+## Mount Point:
+~~~~~~~~~~~~~~~~~
+-> The 'directory' where the device is 'attached to the file system tree'
+
+----------------------
+## File System Type:
+~~~~~~~~~~~~~~~~~~~~~~
+-> Most native Linux file systems are; 
+
+	-> Fourth Extended File Systems '( ext4 )'
+
+-> Although Linux allows many file systems to be mounted, such as;
+
+	-> 'FAT16(msdos)' & 'FAT32(vfat)' & 'NTFS(ntfs)' & 'CD-ROM(iso9660)' 
+
+-------------
+## Options:
+~~~~~~~~~~~~~
+-> File systems can be 'mounted with various options'.
+
+-> We can use this as an added security feature;
+
+	-> 'Mount' file systems as 'read-only'
+
+	-> 'Deny execution privileges' to a mounted file system
+
+---------------
+## Frequency:
+~~~~~~~~~~~~~~~
+-> Single number which is a 'flag for backups'
+
+	-> Specifies if and when a file system is to be backed up 
+
+	-> Backups performed with the 'dump' command
+
+-----------
+## Order:
+~~~~~~~~~~~
+-> Single number which is a 'flag for file system checks' 
+
+	-> Specifies what order file systems should be checked with 'fsck' command
+
+
+
+=================================================================
+----------------------------------------------------------------
+# MOUNTING & UNMOUNTING STORAGE DEVICES 
+----------------------------------------
+
+-> It's best to check the syslogs when hot swapping drives
+
+	-> Shows hardware information relevant to the new connection
+
+	 >>> " sudo tail -f /var/log/syslog "
+
+----------------------------------------------------------------
+
+-> First step in storage management is "mounting" our device
+
+	-> This 'attaches' our hardware to the system file tree
+
+
+-> The 'mount' command is used to mount file systems; obviously.
+	
+	-> Calling w/o any arguments will display a list of the file systems currnetly mounted.
+	
+-> Listing Format:  
+
+		 >>>' <device> on <mount_point> type <file_system_type> (<options>) '
+
+
+--------------------------------------
+## Basic [ mount | umount ] Procedure
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> To mount a device partition from /dev directory:
+	
+	-> Where sda is the device, and sda1 is a partition on that device
+		
+	 >>>' mount /dev/sda1 /mnt/flash '
+
+
+-> Say we have a device currently mounted at: "/dev/sda"
+
+	-> We would like to have it mounted at: "/mnt/flash"
+	
+
+-> Begin by unmounting disk:
+
+	 >>>' sudo umount /dev/sda '
+		
+
+-> Next step is to create a new mount point for the device
+	
+	-> This is simply a directory somewhere on the file system tree
+
+		
+-> The '/mnt' directory is the default location, but this is 'arbitrary'
+
+	-> The fs can be mounted pretty much anywhere and still work 
+
+	 >>>' sudo mkdir /mnt/flash '
+
+
+-> Now when mounting, we specify '-t' option w/ 'file system type'
+
+	 >>>' mount -t ext4 /dev/sda /mnt/flash '
+
+
+-> Now we can examine the contents of our device via the mount point:
+
+	 >>>' cd /mnt/flash '
+	 >>>' ls '
+
+
+-> Fianlly we cant forget to unmount the device and free up those resources
+
+	-> Remeber, once we 'cd' into this directory its considered 'busy' by the system
+
+-> Therefore to 'umount' this device, first exit the mounting directory
+	
+	-> We can then use the 'free' command to check memory usage statistics (buffers)
+
+	 >>>' cd '
+	 >>>' sudo umount /dev/sda '
+	 >>>' free '
+
+
+################################################################
+################################################################
+
+=================================================================
+----------------------------------------------------------------
+# ( gdisk | fdisk ) Partitioning Tools
+----------------------------------------
+
+-> Say we want to 'reformat a flash drive' from 'FAT32' to a 'Linux native' file system
+
+-> This involves two steps: ( 'UNMOUNT FIRST' )
+
+	-> (optional) 'Create a new partition layout' that satifies our needs
+
+	-> Create a 'new, empty file system' on the drive	
+
+-> For 'partitioning' we have 2 tools available:
+
+	-> gdisk		- for 'GDT' style
+
+	-> fdisk		- for 'MDB' style 
+
+
+-> Example below;
+
+	 >>>' sudo unmount /dev/sda1 '
+
+	 >>>' sudo gdisk /dev/sda '
+
+-> interactive
+	 >>>' p '
+	 >>>' l '
+	 >>>' t ' = 83
+	 >>>' v '
+
+
+=================================================================
+----------------------------------------------------------------
+# CREATING A NEW FILE SYSTEM(mkfs)
+-----------------------------------
+
+-> Now with a 'verified partition' on our disk, we 'create a file system' on it
+	
+	-> The 'mkfs' command does this, but we must specify a file system type with it 
+
+	-> Add the verbose flag to see whats going on during creation
+
+	 >>>' sudo mkfs.ext4 -v /dev/sda1 '
+
+-> To reformat back to FAT32 specify vfat as the file system type
+
+	 >>>' sudo mkfs.vfat -v /dev/sda1 '
+
+
+=================================================================
+----------------------------------------------------------------
+# TESTING AND REPAIRING FILE SYSTEMS(fsck) 
+----------------------------------------
+
+	 >>>' sudo fsck /dev/sda1 '
+
+
+=================================================================
+----------------------------------------------------------------
+# MOVING DATA DIRECTLY TO AND FROM DEVICES(dd)
+----------------------------------------------------------------
+## TRIPLE CHECK EVERYTHING IS CORRECT BEFORE EXECUTING COMMAND 
+
+* ITS REFERRED TO AS "DESTROY DISK" FOR A GOOD REASON
+
+-> Memory in its 'raw form' is 'sectors-of-bytes (blocks)' rather than a literal file system tree
+
+	-> With this in mind we can 'view a disk as single collection of those sectors'
+
+-> To 'clone' a drive all were doing is 'copying blocks' from 'pointA' to 'pointB'
+
+	-> The 'dd' command performs this task, with some odd, but 'EXTREMELY SPECIFIC SYNTAX'
+	 
+
+-> 'Syntax':  dd if=input_file of=output_file [bs=block_size [count=blocks]]]
+
+	 >>>' dd if=/dev/sda of=/dev/sdc  (copy to external disk) '
+	 
+	 >>>' dd if=/dev/sda of=flash_drive.img '
+
+
+=================================================================
+----------------------------------------------------------------
+# VERIFYING MD5 CHECKSUMS(md5sum)
+----------------------------------------
+
+	 >>>' md5sum check_image.iso '
+
+

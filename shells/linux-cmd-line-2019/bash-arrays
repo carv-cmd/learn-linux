@@ -1,0 +1,146 @@
+------------------------------------------------------------------
+------------------------------------------------------------------
+           ------------ Bash Arrays  ------------
+------------------------------------------------------------------
+------------------------------------------------------------------
+
+-> Single values may be assigned using the following syntax:
+
+	 >>> name[subscript]=value
+
+	-> Where name is the array name
+	-> subscript is an integer >= 0 (indexed from 0)
+	-> value is a string or integer assigned to the array
+
+
+-> Multiple values may be assigned using the following syntax:
+
+	 >>> name=(value0 value1 ...)	
+	 >>> days=(Sun Mon Tue Wed Thu Fri Sat)
+
+	-> where name is the array name
+	-> vals are assigned sequentially to elements of the array (from 0)
+
+
+-> Assign values to specific elem by specifiying subscripts for each val
+
+	 >>> days=([0]=Sun [1]=Mon [2]=Tue [3]=Wed [4]=Thu [5]=Fri [6]=Sat)
+
+
+-> Calculate array subscripts
+
+	 >>> for ((expr; expr; expr))
+
+
+* Any array variable reference w/o a subscript refers to array[0]
+
+
+==========================================================
+    SYNTAX      | RESULT
+----------------|----------------------------------------
+    arr=()      | Create empty array
+----------------|----------------------------------------
+  arr=(1 2 3)   | Create array w/ 3 elements
+----------------|----------------------------------------
+   ${arr[2]}    | Get elem at index(2) (3rd elem)
+----------------|----------------------------------------
+   ${arr[@]}    | Get ALL elements in array
+----------------|----------------------------------------
+   ${!arr[@]}   | Get ALL elements indices in array
+----------------|----------------------------------------
+   ${#arr[@]}   | Calculate array size/len
+----------------|----------------------------------------
+   arr[0]=3     | Overwrite first element
+----------------|----------------------------------------
+   arr+=(4)     | Append values ("multiple" "allowed")
+----------------|----------------------------------------
+  ls_str=$(ls)  | Store ls output as STRING
+----------------|----------------------------------------
+  arr=( $(ls) ) | Store ls output as an ARRAY
+----------------|----------------------------------------
+  ${arr[@]:s:n} | Get 'n' elems, starting from index 's'
+----------------|----------------------------------------
+ declare -a arr | Create empty array
+----------------|----------------------------------------
+ declare -A arr | Create empty associative array
+----------------|----------------------------------------
+     unset      | Delete an entire array
+----------------|----------------------------------------
+ unset 'foo[2]' | Deletes single elem at foo index:2
+==========================================================
+
+
+=============================================================
+--------------------------------------------
+# Iterating Arrays 
+--------------------------------------------
+
+-> Indices:		
+		
+	 >>> for elem in ${exArray[@]}; do
+	 >>> 		echos: <elem> @ index
+
+--------------------------------------------
+
+-> Elements:
+		
+	 >>> for elem in ${!exArray[@]}; do
+	 >>> 		echos: elem @ <index>
+
+--------------------------------------------
+
+
+=============================================================
+--------------------------------------------
+# Associative Arrays
+----------------------
+
+-> Basically a python dictionary with weird syntax
+
+-> Must be created with the 'declare -A name' syntax
+
+	 >>> declare -A col_code
+
+	 >>> col_code["red"]="#ff0000"
+	 >>> col_code["green"]="#00ff00"
+	 >>> col_code["blue"]="#0000ff"
+
+	 >>> echo ${col_code["blue"]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+=================================================================
+----------------------------------------------------------------
+# DETERMINING DEVICE NAMES(ls /dev)
+----------------------------------------
+
+-> To view all devices connected to our system, view the contents of "/dev" 
+
+	-> A few of the common patterns seen are listed below:
+
+-> In addition we often see symbolic links such as: [ /dev/cdrom | /dev/dvd | /dev/floppy ]
+
+	-> Which point to the actual device files, provided as a convenience
+
+============================================================================
+   PATTERN  |  DEVICE
+============|===============================================================
+  /dev/fd*  | Floppy disk drives
+------------|--------------------------------------------------------------
+  /dev/hd*  | IDE (PATA) disks on older systems
+------------|--------------------------------------------------------------
+  /dev/lp*  | Printers
+------------|--------------------------------------------------------------
+  /dev/sd*  | SCSI disks. On modern Linux systems, the kernel treats all
+	    	| like devices (
+	    	|  including PATA/SATA hard-disks, flash-drives, and USB mass
+	    	|  storage devices of the sorts
+	    	| )
+	    	| as SCSI disks. The rest of the naming system is similar to 
+	    	| the older '/dev/hd*' naming scheme described by PATA.std
+------------|--------------------------------------------------------------
+  /dev/sr*  | Optical drives 
+============================================================================
+

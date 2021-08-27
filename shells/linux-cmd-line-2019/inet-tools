@@ -1,0 +1,228 @@
+
+--------------------------
+--------------------------
+--- Networking(pg.225) ---
+---------------------------
+---------------------------
+--------------------------------------------------------------------
+* COMMON COMMANDS 
+--------------------------------------------------------------------
+
+-> ping 	 - send <ICMP ECHO_REQUEST> to network hosts
+
+-> traceroute	 - Print the route packets trace to a network host
+
+-> ftp		 - internet file transfer program
+
+-> wget 	 - non-interactive network downloader
+
+-> ssh		 - OpenSSH SSH client (remote login program)
+
+-> ip		 - MANAGE: 
+			> routing 
+			> device
+			> policy_routing
+			> tunnels
+
+-> netstat 	 - PRINT:
+			> network_connections
+			> routing_tables
+			> interface_statistics
+		   	> masquerade_connections 
+			> multicast_memberships
+
+--------------------------------------------------------------------
+
+---------------
+* PING - PONG
+---------------
+
+-> The most basic test is 'ping' 
+-> Sends <ICMP ECHO_REQUEST> to host connection
+	-> These are often ignored in secure environments to obscure the host
+
+-------------
+* TRACEROUTE
+-------------
+
+-> Use to trace routing 'hops' from our machine to host machine 
+
+------
+* ip
+------
+
+-> Multi-purpose network configuration tool
+	-> To easily examine our systems network interfaces and routing tables 
+	
+	 >>> ip a
+	
+	-> An easy indicator is 'UP' in the first line of each interface description
+	-> As well as a valid IP address in the 'inet' field
+
+----------
+* NETSTAT
+----------
+
+-> Used to examine various network settings and statistics
+
+-> Using the '-ie' option we can examine the network interfacs in our system
+
+	 >>> netstat -ie
+
+-> Using the '-r' option will display the kernel's network routing table
+	-> This shows how the network is configured to send packets from network to network
+
+	 >>> netstat -r
+
+---------------------------------------------
+* FTP - Transporting Files over the Internet
+---------------------------------------------
+
+-> 'ftp' -> File Transfer Protocol -> ftp://
+
+-> ftp is used to communicate with 'FTP servers'
+	-> Machines which contain files that can be uploaded and downloaded over the internet
+
+----------------------------------------
+* WGET
+----------------------------------------
+
+-> wget is useful for downloading from both web and FTP sites
+	-> Single files, multiple files, or even entire sites can be downloaded
+
+----------------------------------------
+* SSH - Client
+----------------------------------------
+
+-> Secure Shell(SSH) solves the 2 basic problems of secure connection with a remote host
+
+1). It authenticats that the remote host is who it says it is
+	-> (thus 'preventing' man-in-the-middle attacks)
+	
+2). It encrypts all of the communication between the local and remote hosts 
+
+Commands:
+
+	>>> sudo service ssh status	
+	
+	>>> sudo service ssh [start|stop]
+	
+	>>> sudo systemctl [enable|disable]
+	
+	>>> ssh-keygen
+
+----------------------------------------
+* SSHD - Server
+----------------------------------------
+
+-> Run on local host if port forwarding not setup or firewalls blocking 
+
+-> /etc/*host*
+
+-> man sshd
+-> man sshd_config
+-> man host.conf
+-> man hosts_access 
+-> man hosts_options 
+
+	>>> sudo systemctl restart sshd.service	
+
+	>>> sudo ufw allow from any to any port <num> proto tcp
+
+	>>> sudo [ssh|sshd] service restart
+	
+-------------------------------------------
+* PORT SCANNING
+-------------------------------------------
+
+-> PORT_NUM_PRIVILEGES: [ Privileged < 1024 < Unpriviliged ]
+
+-> Use to check the local listening ports and applications:
+
+	 >>> sudo lsof -i -P -n | grep LISTEN
+	 >>> sudo netstat -tulpn | grep LISTEN
+	 >>> sudo ss -tulpn | grep LISTEN 
+	 >>> sudo lsof -i:22 			# check specific port 
+	 >>> sudo nmap -sTu -O <IP-addr-here>
+
+-----------------------
+ 
+-> liblinear-tools
+-> liblinear-dev
+-> ncat
+-> ndiff
+-> zenmap
+
+
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+
+ *** LOCAL PORT FORWARDING ***
+
+---------------------------------------------
+>> ssh -L 8888:97.108.39.68:8080 44.11.22.33
+---------------------------------------------
+
+-----------------------------------------------------------------------------------------
+  	    |	  			|		      |
+  -[8888]   | --[ 97.108.39.68:22 ]-->  | [ 97.108.39.68:22 ]   --> ( 192.168.1.3:8080 )
+  ^	    |   			| [ 192.168.1.2 ]     |
+  ^  	    |	   Public-Network	|		       	     Internal Resource
+  ^	    |				|    SSH-Proxy	      |
+-[10.0.0.4] |				|		      
+ <CLIENT>   |				|		      |
+	    |				|		      |
+-----------------------------------------------------------------------------------------
+ 
+ -- REMOTE ACCESS SETUP --
+--------------------------------|--------------------------------------------
+1) get-public-static(was):	| static-ip:	97.108.39.68 
+--------------------------------|--------------------------------------------
+2) device-NAT-ip: 		| approx:	192,168.1.23x
+--------------------------------|--------------------------------------------
+3) device-name: 		| name:		rpiproxi
+--------------------------------|--------------------------------------------
+4) device-ssh-port: 		| pSSH:		ip:configure.random( >25k )
+--------------------------------|--------------------------------------------
+5) Port-Forwarding(SSH)		| forward:	static:SSH -> device-ip:SSH
+--------------------------------|--------------------------------------------
+6) Register Domain w/ NoIP	| domain:	foobar.foobat.com
+--------------------------------|--------------------------------------------
+7) Point Domain to StaticIP	| target:	^domain^ -> static-public
+--------------------------------|--------------------------------------------
+
+
+> The command below will only tunnel us into the public ssh port/account 
+   > i.e. - forwarding account w/ minimal privilages acts as a proxy in our proxy
+   > Any bad actor must know the network topology and targets prior to public ssh access
+   > This mitigates the need to have multiple ports open.
+   > The public ssh tunnel gets us into the private ssh tunnel
+
+	>>> ssh ubuntu@foobar.foobat.com
+
+> Now in the public ssh account we want to access to internal resources on rpiproxi local machine
+	
+	-> local(8888) <-resource- remoteInternal(80)
+	
+	>>> ssh -L 8888:rpiproxi:80 ubuntu@foobar.foobat.com
+
+
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+
+-> Remote/Reverse Port Forwarding
+
+-----------------------------------------
+>> ssh -R 8888:10.0.0.3:8080 44.11.22.33
+-----------------------------------------
+
+----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+

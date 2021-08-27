@@ -1,0 +1,164 @@
+#########################################################
+
+          ----- 'Automounting Procedure' -----
+
+#########################################################
+
+-> First and foremost, this requires sudo privileges
+
+--------------------------------
+# Locate the partition to mount
+--------------------------------
+
+-> Invoke `fdisk -l` w/ no device specified, 
+
+	-> This causes it to list all drives on the system
+
+	 >>>' sudo fdisk -l '
+
+-> The entry were interested is typically 'Disk /dev/sda'
+
+	-> Hardware info is usually listed for these devices as well
+
+-> With this we can identify what the 'host has labeled the device as'
+
+	-> Additionally we should see the devices partition table and info
+
+-> We can now correlate for example; 
+
+	-> Cruzer Glide: /dev/sda
+
+		-> Partition-1: /dev/sda1
+
+		-> Partition-X: /dev/sdaX
+
+
+--------------------------------
+# Locate Storage Media's UUID
+--------------------------------
+
+-> By calling the "block-id" command this is easy
+
+	-> This will display all UUID's associated w/ all storage devices
+
+	 >>>' sudo blkid '
+
+-> With 'partition reference' from before, 'identify the drives UUID'
+
+	-> With this we can create an 'automount entry' in '/etc/fstab'
+
+
+--------------------------------
+# Create an (auto)Mount Point
+--------------------------------
+
+-> If the drives 'inteneded use' is 'backups', 'sensitive/critical data', etc
+
+	-> This applies to secure critical systems as well
+
+-> If so, this 'automount directory' should be 'private'
+
+	 >>>' sudo mkdir /backups '
+	 >>>' sudo addgroup backups '
+	 >>>' sudo usermod -aG <IDEALY_SYS_USER> '
+
+
+-> Otherwise a 'shared group directory' can be used
+
+	 >>>' sudo mkdir /data '
+	 >>>' sudo addgroup data '
+	 >>>' sudo usermod -aG data <ADD_USER> '
+
+
+-> Finally change ownership of mountpoint with `chown`
+
+	 >>>' sudo chown -R :backups /backups '
+	-or-
+	 >>>' sudo chown -R :data /data '
+
+
+--------------------------------
+# Adding Entry to "/etc/fstab"
+--------------------------------
+
+-> Begin by making a backup copy of your '/etc/fstab' file
+
+	-> This is best practice and YOU WILL HOSE at some point
+
+	 >>>' sudo cp /etc/fstab $HOME/safe-tests'
+
+
+-> Then open fstab in text editor of choice
+
+	 >>>' sudo vim /etc/fstab '
+
+
+-> At the bottom include the following;
+
+	# exPartition:1
+	UUID=<string located earlier> [mnt_pt] [fs_type] [options] [dump] [fs_chk]
+
+
+------------------------------------
+# Validate New "/etc/fstab" Configs
+------------------------------------
+
+-> Before rebooting its wise to test your fstab
+
+	-> Any problems, just overwrite new-fstab w/ fstab.bakup
+
+	 >>>' sudo mount -a '
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

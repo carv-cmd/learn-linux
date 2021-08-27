@@ -1,0 +1,98 @@
+------------------------------------------------------
+------------------------------------------------------
+
+--- Octals ---
+
+-------------------------------------
+
+  Octal  |  Binary  |  File Mode  
+---------|----------|-------------
+    0    |   000    |   - - -
+---------|----------|-------------
+    1    |   001    |   - - x
+---------|----------|-------------
+    2    |   010    |   - w -
+---------|----------|-------------
+    3    |   011    |   - w x
+---------|----------|-------------
+    4    |   100    |   r - -
+---------|----------|-------------
+    5    |   101    |   r - x
+---------|----------|-------------
+    6    |   110    |   r w -
+---------|----------|-------------
+    7    |   111    |   r w x
+---------|----------|-------------
+
+
+------------------------------------------------------
+------------------------------------------------------
+
+>> umask: |000|000|000|010|
+     |
+>> umask: 0002
+	     |
+    -> octal(2)   	->	->	->  ( 0 1 0 )
+------------------------------------------------------
+>>> umask.binary >> [ 0 0 0 | 0 0 0 | 0 0 0 | 0 1 0 ]
+--------------------|-------|-------|-------|-------|
+Original File Mode  | - - - | r w - | r w - | r w - |  => -rw-rw-rw-
+--------------------|-------|-------|-------|-------|
+Mask		    | 0 0 0 | 0 0 0 | 0 0 0 | 0 1 0 |
+--------------------|-------|-------|-------|-------|
+Result		    | - - - | r w - | r w - | r - - |  => -rw-rw-r--
+-----------------------------------------------------
+		      -SP-  |  user | group | world |    
+
+
+
+---------------------------------------------------
+---------------------------------------------------
+Special Permissions: umask leading bit, |0|0|2|2|
+-----------------------------------------^---------
+---------------------------------------------------
+
+  Octals  | Bit Func | Description
+----------|----------|-------------------------------------------------------------------------------------
+          |          | When applied to an executable file, 'effective user ID' from that of the real user
+	  |	     | (user actually running the program) to that of the programs owner.
+	  |	     | Most often this is given to a few programs owned by the superuser
+   4000   |  setuid  | When an ordinary user runs a program that is "setuid root", the program runs with
+	  |	     | the effective privileges of the superuser. This allows the program to access files
+	  |	     | and directories that an ordinary user would normally be prohibited from accessing.
+	  |	     | Obviosuly the number of 'setuid' programs must be kept to an absolute minumum.
+----------|----------|-------------------------------------------------------------------------------------
+	  |	     | Like setuid, the "setgid" bit changes the 'effective group ID' from the from the 
+	  |	     | 'real group ID' to the real user to that of the file owner.
+	  |	     | If the setgid bit is set on a directory, newly created files in the directory will
+   2000   |  setgid  | be given the group ownership of the directory rather than the group ownership
+	  |	     | of the file's creator. 
+	  |	     | This is useful in a shared directory when members of a common group need access
+	  |	     | to all files in the directory, regardless of the file owners primary group.
+----------|----------|-------------------------------------------------------------------------------------
+          |          | Marks an executable as "not swappable". On files, Linux ignores the sticky bit,
+	  |	     | but if applied to a directory, it prevents users from deleting or renaming files
+   1000	  |  sticky  | unless the user is either the directory owner, file owner, or superuser.
+	  |	     | This is often used to control access to a shared directory, such as /tmp.
+	  |	     | Or used to control your people, such as /north_korea (MS-DOS >>> RedStarOS)
+----------|----------|-------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------
+* SPECIAL PERMISSIONS (EXAMPLES) 
+--------------------------------------------------------
+>>> chmod u+s program
+	
+	-> ex-long: [ -rwsr-xr-x ] => [ -rw(s)r-xr-x ]
+
+--------------------------------------------------------
+>>> chmod g+s dir 
+
+	-> ex-long: [ drwxrwsr-x ] => [ drwxrw(s)r-x ]
+
+--------------------------------------------------------
+>>> chmod g+s dir 
+
+	-> ex-long: [ drwxrwxrwt ] => [ drwxrwxrw(t) ]
+
+--------------------------------------------------------

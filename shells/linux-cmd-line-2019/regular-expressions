@@ -1,0 +1,308 @@
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+--------------------------- REGEX ---------------------------   
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+# Regular Expressions are about as arcane as it gets
+
+	-> Doesn't mean its not arguably the most powerful tool available for text
+
+
+# What are Regular Expressions???
+
+	-> Simply put: "regex's are symbolic notations used to identify patterns in text"
+
+	-> While offered by almost every major language and platform, not all are the same 
+
+	-> Here we will be using the POSIX model, but check [perl, python(C++?)]
+
+
+# Main program used to work with regex's is 'grep'
+
+	-> 'grep' is derived from the phrase "global regular expression print"
+
+
+# grep searches text files for the occurnce text matching a specified regex
+
+	-> Then outputs any line containing a match to standard output (stdout)
+
+
+# So far, grep has only been used with fixed strings like so:
+
+	-> ls /usr/bin | grep zip
+
+
+# The grep syntax is listed below, where regex is a regular expression
+
+	-> grep [options] regex [file...]
+
+--------------------------
+* Common <grep> Options
+----------------------------------------------------------------------------
+  OPTION  |      LONG OPTION      |  DESCRIPTION
+----------|-----------------------|-----------------------------------------
+   -i     |    --ignore-case      | Ignore case. Do not distinguish between
+	  	  |			 			  | uppercase and lowercase characters
+----------|-----------------------|-----------------------------------------
+   -v     |    --invert-match     | Invert match. Default: print matches
+		  |						  | This prints all where !match
+----------|-----------------------|-----------------------------------------
+   -c     |       --count         | Print number of matches(or !matches if
+		  |						  | -v specified) instead of lines themselves
+----------|-----------------------|-----------------------------------------
+   -l     | --files-with-matches  | Print the name of each file that contains
+		  |						  | a match instead of lines themselves
+----------|-----------------------|-----------------------------------------
+   -L     |--files-without-matches| Like -l options but inverse
+		  |						  |
+----------|-----------------------|-----------------------------------------
+   -n     |    --line-number      | Prefix each matching line with the 
+		  |						  | number of the line within the file
+----------|-----------------------|-----------------------------------------
+   -L     |    --no-filename	  | For multi-file searches, supress the 
+		  |						  | output of filenames
+----------|-----------------------|-----------------------------------------
+
+
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+# Metacharacters and Literals
+
+	-> Up to now, any usage of grep has been with all literal characters
+
+	-> grep bzip:
+
+		> line contains 4 characters
+		> in the line the characters [ b, z, i, p ] are found in that order
+		> verifies theres no characters in between |b|z|i|p|
+
+# Regex's may also include 'Metacharacters' used to specify more complex matches
+
+# Metacharacters Include:  ^  $  .  [  ]  {  }  -  ?  *  +  (  )  |  \ 
+
+	-> All other characters are considered literals
+	
+	-> Although sometimes backslash is used to create 'meta-sequences' 
+
+		-> Thus allowing metacharacters to be escaped and treated as literals
+
+	-> It is vital to enclose our regex's in quotes or else the shell WILL expand them
+
+
+=====================================================================================================
+=====================================================================================================
+
+## Basic Metas
+
+----------|----------|-------------------------------------------------------------------------------
+          |          | 
+          |          | Used to match any character. 
+   Any    |    .     |  Notice it will not match 'zip' (.zip -> bunzip2, gzip, ...)
+          |          |   len(pattern) must be greater than or equal to 4 to match (.zip legal)
+          |          | 
+----------|----------|-------------------------------------------------------------------------------
+          |          | 
+          |          | These cause the match to occur only if the regex is found:
+  Anchor  |  ^   $   |  - caret(^): beginning of the line 		[zip|details]
+          |          |  - dollar($): end of the line			[g|zip]
+          |          |  - caret-dollar will match blank lines (^$)	[|]
+          |          | 
+----------|----------|-------------------------------------------------------------------------------
+
+
+-> Using 'any' + 'anchors' we can craft a query like the question below:
+
+	-> Return 6 letter word; [2nd letter is 'e'] && [last letter is 'r']
+
+	 >>> grep '^.e...r$' /usr/share/dict/american-english-large  -> letter
+
+
+=====================================================================================================
+=====================================================================================================
+
+## Bracket Expansion 
+
+-----------|-----------|-------------------------------------------------------------------------------
+           |           | 
+  Bracket  |           | Allows matching of a single character, from a specified set of characters
+           | '[bg]zip' |
+ Expansion |           |  >>> grep '[bg]zip' dirlist*.txt
+           |           | 
+-----------|-----------|-------------------------------------------------------------------------------
+# Metacharacters also lose their meta when placed inside brackets, except for 2
+-----------|-----------|-------------------------------------------------------------------------------
+           |           | 
+           |           | If the first char in a bracket expression is a caret, the remaining chars are
+ (^) caret | negation  | assumed to be a set of chars that must not be present at the given char pos
+           |           | 
+           |           |  >>> grep '[^bg]zip' dirlist*.txt
+           |           | 
+-----------|-----------|-------------------------------------------------------------------------------
+           |           | 
+           |           | Say we wanted a regex that would find every pattern beginning w/ uppercase
+ (-) dash  | character | We could type out all 26 letters, or use the dash to range values
+		   |  range    | Ranges dont have to be continious either, split ranges work just fine 
+           |           | To get a dash in our bracket expression, just put it first
+           |           | 
+           |           |  >>> grep '[A-Z]' dirlist*.txt
+           |           | 
+           |           |  >>> grep '^[A-Za-z0-9]' dirlist*.txt
+           |           | 
+           |           |  >>> grep '[-AZ]' dirlist*.txt
+           |           | 
+-----------|-----------|-------------------------------------------------------------------------------
+
+=====================================================================================================
+
+## Character Classes
+
+  CLASSES  | DESCRIPTION
+-----------|------------------------------------------------------------------------------------------
+ [:alnum:] | Alphanumeric characters. In ASCII equivalent to: [ A-Za-z0-9 ]
+-----------|------------------------------------------------------------------------------------------            
+ [:word:]  | Same as [:alnum:], with the addition oof the underscore (_) character
+-----------|------------------------------------------------------------------------------------------            
+ [:alpha:] | Alphabetic characters. In ASCII equivalent to: [ A-Za-z ]
+-----------|------------------------------------------------------------------------------------------            
+ [:blank:] | Includes the space and tab characters
+-----------|------------------------------------------------------------------------------------------            
+ [:cntrl:] | ASCII control codes. Includes the ACSII characters 0 through 31 and 127
+-----------|------------------------------------------------------------------------------------------            
+ [:digit:] | Numerals 0 through 9
+-----------|------------------------------------------------------------------------------------------            
+ [:graph:] | Visisble characters. In ASCII, it includes characters 33 through 126
+-----------|------------------------------------------------------------------------------------------            
+ [:lower:] | Lowercase letters
+-----------|------------------------------------------------------------------------------------------            
+ [:punct:] | ASCII Punctuation: [ - ! " # $ % & '( ) * + , . / : ; < = > ? @ [\\\] _ ` { | } ~ ]
+-----------|------------------------------------------------------------------------------------------            
+ [:print:] | Printable characters. All the characters in [:graph:] plus the space character
+-----------|------------------------------------------------------------------------------------------            
+ [:space:] | [ space|tab|carriage_return|newline|vertical_tab|form_feed ] : [   \t \r \n \v \f ]
+-----------|------------------------------------------------------------------------------------------            
+ [:upper:] | Uppercase letters
+-----------|------------------------------------------------------------------------------------------            
+[:xdigit:] | Chars used to express hexadecimal numbers. In ASCII: [ 0-9A-Fa-f ]
+-----------------------------------------------------------------------------------------------------            
+
+=====================================================================================================
+
+# POSIX Basic vs. Extended Regular Expressions 
+
+-> There are 2 kinds of regular expression implementations in POSIX
+	
+	-> basic regular expressions (BRE)
+
+	-> extended regular expressions (ERE)
+
+		-> 'grep' is an example of BRE compliant 
+
+ IMPLEMENTATION | METACHARACTERS
+----------------|-------------------------
+      BRE       | ^ $ . [ ] *
+----------------|-------------------------
+      ERE       | BRE plus ( ) { } ? + |
+----------------|-------------------------
+
+*-> However; (, ), {, } are treated as metacharacters in BRE if escpaed w/ backslash
+
+-> Traditionally 'egrep' would be the ERE compliant program
+
+	-> But now we can just use the -E option with grep
+
+------------------------------------------------------------------------
+
+# Alternation: ( | ) pipe is used to specify multiple groups of characters
+
+	 >>> grep -E '^(bz|gz|zip)' dirlist*.txt
+
+------------------------------------------------------------------------
+
+# Quantifiers: ( ? ) in effect means; "Make preceding element optional"
+
+--------------------------------------------------- 
+
+( ? ) - Match an element ZERO or ONE times
+	
+-> Consider phone number formatting compliance:
+
+	-> < 3:alnum >( dash )< 3:alnum >( dash )< 4:alnum >
+
+	-> (nnn) nnn-nnnn | nnn nnn-nnnn | nnn-nnn-nnnn
+
+	regex: '^\(?[0-9][0-9][0-9]\)?( |-)[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$'
+
+--------------------------------------------------- 
+
+( * ) - Match an element ZERO or MORE times
+
+-> Consider verifying if a given string is a sentence:
+	
+	-> '[[:upper:]][[:alnum:][:punct:] ]*(\.|\?|\!)*'
+
+-> Trailing w/ (+)plus specifies more 'formal' strings:
+
+-> i.e: here they must end with one or more (.|?|!)
+
+	-> '[[:upper:]][[:alnum:][:punct:] ]*(\.|\?|\!)+'
+
+--------------------------------------------------- 
+
+( + ) - Match an element ONE or MORE times
+
+-> Find: lines consisting of text where:
+
+	> Groups > 1 of alphabetic characters 
+
+	> All delimited by a single space
+
+	-> '^([[:alpha:]]+ ?)+$'
+
+--------------------------------------------------- 
+
+( {} ) - Match an Element a Specific Number of Times
+
+> Match the preceding element if it occurs...
+---------------------------------------------
+ {n}    | Exactly n times.
+--------|------------------------------------
+ {n,m}  | (n times) =< (regex) < (m times)
+--------|------------------------------------
+ {n,}   | n or more times
+--------|------------------------------------
+ {,m}   | No more than m times
+---------------------------------------------
+
+-> A better crafted phone number validator can be made like this
+
+	-> '^\(?[0-9]{3}\)?( |-)[0-9]{3}-[0-9]{4}$'
+
+-> Monjuju-Generate a list of phone numbers:
+	
+	 >>> for i in {1..10}: do echo "(${RANDOM:0:3})-${RANDOM:0:3}-${RANDOM:0:4}" >> list.txt; done
+
+--------------------------------------------------- 
+
+> Findign Ugly Filenames w/ 'find'
+
+	>>> find . -regex '.*[^-_./0-9a-zA-Z].*'
+
+
+> Searching for Files with Locate
+
+	-> BRE: 	--regexp
+	-> ERE: 	--regex
+	
+
+------------------------------------------------------------------------
+
+> Extra:
+	
+	 >>> cd /usr/share/man/man1
+
+	 >>> zgrep -El 'regex|regular expression' *.gz
+
+=====================================================================================================

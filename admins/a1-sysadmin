@@ -1,0 +1,177 @@
+###################################################################
+
+           ----- System Administrator Toolset -----
+
+###################################################################
+
+=================================================================
+--------------------------------------------------------------
+# Package Management 
+---------------------
+
+-> 'dpkg' 			- manipulates .deb files directly 
+-> 'apt'			- wrapper library for dpkg
+-> 'aptitude'		- text-based pkg manager (uses apt)
+-> 'dselect'		- 'verify what this does'
+
+-> 'wget'			- non-interactive downloader
+-> 'curl'			- transfer ( URL || data to | from a server )
+-> 'md5sum'			- calculate an MD5 checksum (run before extract)
+-> 'tar'			- file archiving utility, tarball tools
+-> './configure'	- configure pkg compiler scripts to host machine
+-> 'make'			- generates config(makefiles) to install pkg
+-> 'make install'	- installs pkg on host machine
+
+-> 'build_essentials' 		- ubuntu dev metapkg; full C compiler lib
+
+*-> 'pkg-config'			- ???
+
+
+=================================================================
+--------------------------------------------------------------
+# Backups & Recovery
+---------------------
+
+-> 'dump'			- ext2/3/4 filesystem backup
+-> 'restore'		- restore [ files ] || [ file systems ] from `dump`s
+-> 'cpio'			- copy files to and from archives
+-> 'dd'				- convert & copy raw data sectors (low-level raw transfer)
+-> 'tar'			- archiving utility (very portable)
+-> 'pax'			- archives conform to Archive/Interchange File Format
+
+
+=================================================================
+--------------------------------------------------------------
+# Filesystem Utilities 
+-----------------------
+
+-> 'man fs'			- Linux filesystems manual page
+-> 'findmnt'		- find a filesystem
+
+-> 'mount'			- mount a filesystem
+-> 'umount'			- unmount a filesystem
+
+-> 'fdisk'			- manipulate MBR partition tables
+-> 'gdisk'			- manipulate GPT partition tables
+
+-> 'fsck'			- check and repair a filesystem
+-> 'mkfs.<type>'	- create a filesystem of type <man mkfs>
+
+-> 'fdisk -l'		- view the booting drive
+-> 'blkid'			- locate/print block device attributes
+-> 'lsblk'			- list block devices
+-> 'findmnt'		- find a filesystem
+
+-> 'e2label'
+-> 'xfs_admin'
+-> 'fatlabel'
+
+=================================================================
+--------------------------------------------------------------
+# Storage Media Device Management
+---------------------------------
+
+-> 'dmsetup'		- low-level logical management
+-> 'kpartx'			- create device maps from partition tables
+-> 'partx'			- tell kernel abt presence & indices of on-disk partitions
+-> 'modprobe'		- add & remove modules from the linux kernel
+-> 'udev'			- dynamic device management tool
+-> 'udevadm'		- udev management tool
+-> 'multipath'		- device mapper target autoconfig
+
+
+=========================================================================
+--------------------------------------------------------------------
+# Users & Groups & Permissions
+----------------------------------
+
+-> 'adduser'	 	- add a user or group to the system
+-> 'useradd'		- low level interface (adduser preferred)
+-> 'addgroup'		- add a group to the system
+-> 'groupadd'		- create a new group (addgroup preferred)
+
+-> 'usermod'		- modify a user account
+-> 'groupmod'		- modify a group definition on the system
+-> 'deluser'	 	- remove a group or user from the system
+
+-> 'umask'	 		- set the default file permissions
+-> 'chgrp'	 		- change a file groups ownership
+-> 'chown'	 		- change a files owner
+-> 'chmod'	 		- change a files mode
+-> 'chroot'			- run cmd || ( shell -i ) w/ special /root
+
+-> 'su'		 		- run a shell as another user
+-> 'sudo'		 	- execute a command as another user
+-> 'visudo'			- edit the sudoers file
+
+-> 'id'		 		- display user identity
+-> 'chfn'		 	- change real username and information
+-> 'passwd'	 		- change a users password
+
+-> 'w'		 		- show who is logged on and what they are doing
+-> 'who'		 	- show all users that are currently logged on
+-> 'man utmp'	 	- man pages on userlogging
+
+
+=========================================================================
+--------------------------------------------------------------------
+# Resource Monitoring
+------------------------
+
+# Server
+----------
+-> 'ps'		 		- report a snapshot of current processes
+-> 'top'		 	- display tasks
+-> 'iostat'			- report CPU & I/O stats for devices and partitions
+-> 'jobs'		 	- list active jobs
+-> 'bg'		 		- place a job in the background
+-> 'fg'		 		- place a job in the foreground
+-> 'kill'		 	- send a signal to a process
+-> 'killall'	 	- kill processes by name
+-> 'pkill'			- look up/signal processes by name || other_attrs
+-> 'shutdown'	 	- shutdown or reboot the system
+-> 'xlogo'	 		- sample testing window
+
+# GUI
+-------
+-> 'pstree'	 		- forest process tree (parent/child processes)
+-> 'vmstat'	 		- System resource usage. See man-pages
+-> 'xload'	 		- Graphical program for plotting system-load vs. time (Ctrl-C: exit)
+-> 'tload'	 		- Similar to xload, but in the terminal. (Ctrl-C: exit)
+
+
+=========================================================================
+--------------------------------------------------------------------
+# Booting & Shutting Down
+--------------------------
+
+-> 'systemd, init' 			- systemd system and service manager
+-> 'bootup'					- system bootup process (w/ booting tree)
+
+
+=========================================================================
+--------------------------------------------------------------------
+# System Services
+-------------------------
+
+-> 'modprobe'				- add and remove moduels from the Linux kernel
+-> 'depmod'					- generate modules.dep and map files 
+-> 'kernel-command-line'	- kernel command line parameters
+
+-> 'telinit'				- change SysV run-level
+-> 'service'				- run a SystemV init script
+-> 'systemctl'				- control the systemd system and service manager
+-> 'journalctl' 			- query the systemd journal
+-> 'daemon' 				- writing and packaging system daemons (background services)
+-> 'systemd-notify' 		- notify service manager about start-up completion + status changes
+-> 'init-d-script'			- compliant template for init.d scripts
+
+>> systemd-system.conf
+>> locale.conf
+>> systemd.unit
+>> systemd.special
+>> systemd.directives
+
+*-> 'sd-daemon'			- ???
+
+

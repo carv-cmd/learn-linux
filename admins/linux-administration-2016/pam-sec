@@ -1,0 +1,157 @@
+#############################################################################
+
+           ----- Pluggable Authentication Modules ( PAM ) -----
+
+#############################################################################
+
+-> Pluggable Authenication Modules ( PAM )
+
+	-> System of libraries allowing the use of a centralized authentication mechanism
+
+
+-----------------
+# What is PAM ?
+~~~~~~~~~~~~~~~~~
+-> At its core, nothing more than a library
+
+-> When programs need to perform authentication on some user,
+
+	-> Theu call a function that exists in the PAM library
+
+	-> Think an API for applications to quickly/easily authenticate a user 
+
+-> When invoked, PAM checks the config file for that application;
+
+	-> If it finds no application-specific config file; then default fallback
+
+-> This config file tells lib what types of checks are required for user authenitcation
+
+	-> Based on this, the appropriate sec-module is called upon
+
+	-> Fedora, RHEL, CentOS will find these checks in the /lib64/security directory
+
+-> Modules can check a number of things, 
+	
+	-> From /etc/passwd or /etc/shadow file
+
+	-> To calling an LDAP server for authentication 
+
+-> Once a user is/isnt authenticated
+
+	-> Confirmation message is sent back to the calling program
+
+
+================================================================================
+# Configuring PAM
+
+-> We can find PAM config files in the [ /etc/pam.d ] directory
+
+	-> These files will have the common row structure as follows;
+
+	-> [ module_type ][ control_flag ][ module_path ][ arguments ]
+
+
+## Where [ module_type ] represents 1 of 4 types of modules;
+=======================================================================
+ MODULE-TYPE | FUNCTION
+=============|=========================================================
+             | Instructs application program to prompt user for a 
+   auth      | password and then grants both user and group privileges.
+             | It is used for authentication
+-------------|--------------------------------------------------------
+             | Performs no authentication, but determines access from
+  account    | other factors, such as time of day or user locale.
+             | It is used for authorization. The root login can 
+             | can be given only console access this way
+-------------|--------------------------------------------------------
+  session    | Specifies what, if any, actions need to be performed
+             | before or after a user is logged in (logging report)
+-------------|--------------------------------------------------------
+  password   | Specifies the module that allows users to change
+             | their password ( if appropriate )
+=======================================================================
+
+
+# The [ control_flag ] specifies what do to on success/failure
+=======================================================================
+ CONTROL_FLAG | DESCRIPTION
+==============|=======================================================
+   required   | Module 'must succeed', if fails; return 'failure'
+--------------|-------------------------------------------------------
+  requisite   | Module 'must succeed' && 'pass xyz check too'
+--------------|-------------------------------------------------------
+  sufficient  | If 'one' check passes, 'no more checks are required'
+--------------|-------------------------------------------------------
+   optional   | PAM 'continues checks' even if one has failed
+--------------|-------------------------------------------------------
+   include    | Include all from diff config file ('chain'|'stack')
+--------------|-------------------------------------------------------
+   substack   | 'Substack' failure doesnt terminate full stack
+=======================================================================
+
+
+# The [ module_path ] specifies where the authentication resource is
+=======================================================================
+-> This is usually the [ /lib/security ] location
+
+	-> * Verify location for debian systems *
+
+
+# The [ arguments ] represent the parameters passed to the auth-module
+============================================================================
+    ARGUMENTS      | DESCRIPTION
+===================|=======================================================
+      debug        | Sends debugging information to system logs
+-------------------|-------------------------------------------------------
+     no_warn       | Does not give warning msgs to calling application
+-------------------|-------------------------------------------------------
+   use_first_pass  | Doesnt prompt user for password a second time
+-------------------|-------------------------------------------------------
+   try_first_pass  | Like above, but if failure returned; prompt password
+-------------------|-------------------------------------------------------
+  use_mapped_pass  | Use token generated by prev mod to generate new token
+-------------------|-------------------------------------------------------
+   expose_account  | Allows module to be less discreet about acct info
+-------------------|-------------------------------------------------------
+      nullok       | Allows called PAM module accept blank(null) passwords
+============================================================================
+
+
+============================================================================
+
+# Debugging PAM
+
+-> Check the system logs in the [ /var/log/syslog ] file
+
+	-> Simply `tail -f` /syslog while attempting to access a resource
+
+	 >>> tail -f /var/log/syslog 
+
+	 >>> (do problematic thing)
+
+============================================================================
+# PAM Modules
+~~~~~~~~~~~~~~
+
+-> 'pam_pwquality.so' is called to validate new passwords, see;
+
+	 >>> man pam_pwquality
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

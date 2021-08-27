@@ -1,0 +1,217 @@
+--------------------
+--------------------
+* COMPRESSING FILES
+--------------------
+--------------------
+
+-----------------------------------------------------------------
+
+-> Data compression is the process of removing 'redundancy' from data
+
+-> A very rudementary form of this is 'run-length' encoding
+
+ex>> Given: 1 pixel == 24 bits (3 bytes)
+
+ex>> ( 100px * 100px image ) * 3^ == 30,000 bytes
+
+ex>> We could: [ n10000:c0 ] where;
+	-> n is the number of repetitions
+	-> c is the byte-code or color for the cells
+
+-----------------------------------------------------------------
+
+> Generally there are 2 categories for 'compression algorithms'
+
+> Ideally we should aim to only use 'lossless' compression
+> Error redudancy is hard missing 64% of the original data
+
+----------|--------------------------------------------------
+ Lossless | Method preserves all data contained in original.
+	  | This means that when a file is restored from a 
+	  | a comrpessed version, the restored file is exactly
+	  | the saem as the original, uncompressed version
+----------|--------------------------------------------------
+  Lossy   | Conversely, lossy removes data as the compression
+	  | is performed to allow more compression to be 
+	  | applied. When a lossy file is restored, it does
+	  | not match the original version; rather, it is 
+	  | a close approximation.
+	  | Lossy Examples: JPEG(images) - MP3(music)
+----------|--------------------------------------------------
+
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+* | GZIP | GUNZIP | ZCAT | *
+--------------------------------------------------------
+
+> To compress a file we use:
+	
+	 >>> gzip raw_file
+
+--------------------------------------------------------
+
+> The inverse to gzip is:
+	 
+	 >>> gunzip zip_file.gz
+
+	 >>> gzip -d zip_file.gz
+
+--------------------------------------------------------
+
+> Verbose listing: compresssion stats + file integrity:
+
+	 >>> gzip -ltv zipped
+
+--------------------------------------------------------
+
+> We can pipe cmds to create a compressed directory listing:
+
+	 >>> ls -l /<dir> | gzip > dir-listing.txt.gz
+
+--------------------------------------------------------
+
+> Using zcat contents can be handled w/o changing .gz file:
+
+	 >>> zcat zipeed_file.gz | wc -l
+
+--------------------------------------------------------
+
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+* ARCHIVING FILES
+------------------
+
+-> Another file management task closely related to compression is archiving.
+
+-> This is the process of gathering up many files;
+-> Then bundling up that group of files into a single large file
+
+	-> Archiving is often done as part of system backups.
+	-> Or transfering old data to remote redundant long-term storage 
+
+--------------------------------------------------------------
+
+-> In UNIX-land; 'tar' (tape archive) program is the classic goto
+	
+	-> Originally a tool for producing backup tapes, hence the name
+
+	-> 'Plain' tar archive denoted by: *.tar
+
+	-> A gzipped archive is denoted by: *.tgz
+
+--------------------------------------------------------------
+
+> Command Syntax:  tar mode[options] pathname...
+
+----------------------------
+  MODE  |  DESCRIPTION
+--------|------------------------------------------------------------
+   c    | Create an archive from a list of files and/or directories
+--------|------------------------------------------------------------
+   x    | Extract an archive
+--------|------------------------------------------------------------
+   r    | Append specified pathnames to the end of an archive
+--------|------------------------------------------------------------
+   t    | List the contents of an archive
+--------|------------------------------------------------------------
+   v    | Verbose listings 
+--------|------------------------------------------------------------
+   f    | specifies name. always trailing 
+--------|------------------------------------------------------------
+
+--------------------------------------------------------------
+
+-> To archive an entire directory:
+
+	 >>> tar cf big-data.tar big-data
+
+-> To list the contents of the archive:
+
+	 >>> tar tf big-data.tar
+
+-> For a more verbose listing:
+
+	 >>> tar tvf big-data.tar
+
+-> Extracting the archive in a new location:
+
+	 >>> cd unarchive-here
+	
+	 >>> tar xf ~/*/big-data.tar 
+
+-> Create /home archive and push to external(usb) storage:
+
+	 >>> sudo tar cf /mnt/device/bakups/user-bakup.tar /home
+
+-> Using tar + find allows the creation of complex backup plans:
+
+
+	 >>> find /dir -name 'files-xyz' -exec tar rf tarchive.tar '{}' '+'
+
+	 !>>> find /dir -name 'files-xyz' | tar cf - --files-from=- | gzip > tarzip.tgz
+		
+	 *>>> find /dir -name 'file-A' | tar cvf tarbox.tgz -T -
+
+	 *>>> find /dir -name =file-A' | tar cjf tarbob.tbz -T -
+
+-> Or we could transfer files over a secure connection using SSH:
+
+	 >>> ssh remote-sys 'tar cf - documents' | tar xf -
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+* ZIP
+-------
+
+-> The 'zip' program performs both compression and archiving
+-> The primary compression algo used is gzip with bzip2 coming in close second	
+-> The command syntax is as follows:
+
+	-> zip options zipfile file...
+	 
+	-> zip -r playground.zip playground
+	
+-> Unless we include the -r for recursion only the directory is copied, not its contents
+
+-> '.zip' extension is added automatically as well
+
+-> A simpel inverse is performed using 'unzip'
+
+	 >>> unzip ../zipped-up.zip
+
+-> .zip vs .tar
+
+	-> With .zip, if an existing archive is specified, its updated rather than replaced
+
+		-> Meaning the existing archive is preserved, 
+		
+		-> But new files are added, and matching files are replaced
+
+-> Files may also be listed and extracted selectively from a zip archive
+
+-> Using the -l option justs lists the contents without actually extracting them
+
+	-> Just specify the path to 'unzip'
+
+	 >>> unzip -l zipground.zip zipground/dir-011/file-B
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

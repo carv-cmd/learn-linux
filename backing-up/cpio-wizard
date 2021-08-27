@@ -1,0 +1,38 @@
+####################################################################
+
+      ----- ( Backup & Restore ) w/ ( 'cpio' & 'find' ) -----
+
+####################################################################
+
+-------------------------------
+# Few things to note w/ 'cpio'
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-> How to use 'find' w/ 'cpio' to do 'full' & 'incremental' backups
+
+	-> While leaving the 'access time (atime)' of the files 'unmodified'
+
+-> What 'arguments' typically 'yield the best results'
+
+-> How to use 'rsh' to send a 'cpio' backup to a 'remote' backup drive
+
+-> How to get a 'table of contents' of that volume
+
+-> How to manipulate tape drive.. and 'restore from a backup created by cpio'
+
+
+==============================================================================
+----------------------------------------------------------------------------
+# Basic `cpio`
+----------------
+
+-> Syntax to 'Backup' w/ cpio;
+
+	 >>>' cpio -o [ aBcv ] '
+
+
+-> Syntax to 'Restore' w/ cpio;
+
+	 >>>' cpio -i [ Btv ] [ patterns ] '
+
+

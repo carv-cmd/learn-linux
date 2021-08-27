@@ -1,0 +1,240 @@
+------------------------------------------------------------
+------------------------------------------------------------
+            ----------- Exotica -----------
+------------------------------------------------------------
+------------------------------------------------------------
+
+================================================================
+# Group Commands and Subshells
+--------------------------------
+
+## Commands can be grouped together one of two ways:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Group Command Syntax
+
+	 >>> { command1; command2; [command3; ...] }
+
+
+-> subshell Syntax
+
+	 >>> (command1; command2; [command3;...])
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+-> Its important to note the difference between either,
+
+	-> GROUP_COMMANDS: executed in the current shell environment
+
+	-> SUBSHELLS: executed in subshell environment
+
+
+-> When a subshell terminates, its environment is also destoryed
+	
+	-> Any variables created within that environemnt, also destroyed
+
+
+-> GROUP COMMANDS are usually preferred for this reason
+
+	-> Less resources == faster == less memory 
+
+
+================================================================
+# Process Substitution
+--------------------------------
+
+-> What if you need data generated within a subshell?
+
+	-> Remember, pipelines are executed in subshells as well
+	
+	 >>> ls -l 	
+
+	 >>> ls -l | grep zip | sort
+
+
+-> "Process Substitution" is an exotic expansion workaround for ^
+
+
+-> Expressed in two ways, where 'list' is a list of commands;
+
+	1). <(list) : processes that : <(PRODUCE standard OUTPUT)
+
+	2). >(list) : processes that : >(INTAKE standard INPUT)
+
+
+-> Where $REPLY is destroyed on pipeline termination
+
+	 >>> echo "foobar" | read
+	 >>> echo "$REPLY"
+
+
+-> Using ProcSub retains data after subshell termination
+	
+	 >>> read < <(echo "foo")	
+	 >>> echo "$REPLY"
+
+-> Often used in with loops containing 'read'
+
+	-> Such as a read loop that processes directory contents
+
+	 >>> while read attrs links owner group size month date time filename; do
+	 >>> 		cat <<- EOF
+	 >>>			Filename:	$fileanme
+	 >>>			...
+	 >>>		EOF
+	 >>> done < <(ls -l | tail -n +2)
+
+
+================================================================
+# Traps
+-----------
+
+-> Larger scripts can benefit from having a signal handling routine
+
+	-> This applies is a user logs off or shuts down the machine mid execution
+
+	-> When this event occurs, a signal is sent to all effected processes
+
+	-> In turn, the programs representing these processes can terminate gracefully
+
+
+-> An example being a /tmp file created during script execution
+
+	-> As always we want to delete that /tmp file after script termination
+
+
+-> What about the script terminating prematurely?... trap
+
+	 >>> trap argument signal [signal...]
+	
+-> Where:
+
+	-> arugment: string to be read and treated as a command
+
+	-> signal: spec of signal that will trigger 'exe' of interpreted command
+
+
+================================================================
+# Temporary Files
+-------------------
+
+-> /tmp files can expose security risks due to the shared nature of /tmp directory
+
+-> Therefore, the naming of these files cant be arbitrary
+
+	-> Particularly scripts running with sudo privileges
+
+
+-> /tmp files must have non predictable file names
+
+	-> Without it, exploits such as temp race attacks are serious concerns
+
+
+-> One way to do this is as follows;
+
+	 >>> tempfile=/tmp/$(basename $0).$$.$RANDOM
+
+
+-> Creates a file in the /tmp directory w/;
+	
+	-> program name
+	-> process ID (PID)
+	-> random-integer (1-32767)
+
+
+-> Using 'mktemp' prog to name && create /tmp file is preferred
+
+	-> Accepts a template to format with random values ( X: replace_random )
+
+	 >>> tempfile=$(mktemp /tmp/foobar.$$.XXXXXXXXXXXXXXXXXXXX)
+
+
+================================================================
+# Asynchronous Execution
+--------------------------
+
+-> With the 'wait' keyword we can script async processes
+
+	 >>> child_process & 
+	 >>> pid=$!
+
+	 >>> do_stuff
+
+	 >>> wait "$pid"
+
+	-> $! will always expand into the last job put in the background
+
+	-> wait; causes parent script to wait on child to terminate _main_loop_
+
+
+================================================================
+# Named Pipes
+----------------
+
+-> Most UNIX-like systems support a special file type
+
+-> These are 'named pipes'
+
+	-> Used to connect 2 processes & used just like other file types
+
+
+-> 'client-server' models can utilize many methods of 'interprocess-communication'
+
+	-> Named Pipes, sockets, etc
+
+
+-> NamedPipes behave like files but actually form FIFO buffers
+
+	-> As with normal (unamed) pipes, data goes in one side and slides out the other
+
+
+-> With named pipes the following is possible;
+
+	 >>> process1 > named_pipe
+	AND
+	 >>> process1 < named_pipe
+
+	-> And it will behave like
+
+	 >>> process1 | process2
+
+
+------------------------
+## Named Pipe Creation
+~~~~~~~~~~~~~~~~~~~~~~~
+-> To create a named pipe the 'mkfifo' cmd is used
+
+	-> To verify creation, the file attr column will begin with 'p'
+
+
+---------------------
+## Named Pipe Usage
+~~~~~~~~~~~~~~~~~~~~
+-> In one shell window, execute the following;
+
+	 >>> ls -l > nam_pipe_1
+
+-> It appears to hang but the pipe is actually just blocked
+
+	-> Once we attach a process to the other end of the pipe is clears
+
+	 >>> cat < nam_pipe_1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

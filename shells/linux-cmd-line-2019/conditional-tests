@@ -1,0 +1,335 @@
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+       ---------------- Conditional Tests ---------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+
+# test
+
+
+-> The 'test' command performs a variety of checks and comparisons
+
+	-> By far the most frequently used command alongside 'if'
+
+
+-> test comes in 2 flavors:
+
+	 >>> test expression
+
+	 >>> [ expression ]
+
+
+-> Where 'expression' is an expression evaluated as true|false
+
+	-> returns exit-status(1) when evaluates 'true'
+
+	-> returns exit-status(0) when evaluates 'false'
+
+
+=============================================================================
+
+# File Expressions (compare files)
+
+--------------------------------------------------------------------------
+    EXPRESSION    |  Is True If:
+==================|=======================================================
+     -r file      | file exists & is readable 
+	 			  | (has readable permissions for the effective user)
+------------------|-------------------------------------------------------
+     -w file      | file exists & is writable 
+	 			  | (has write permission for the effective user)
+------------------|-------------------------------------------------------
+     -x file      | file exists & is executable
+	 			  | (has execute/search permission for the effective user)
+==================|=======================================================
+      -t fd       | fd is a descriptor directed to/from the terminal.
+	 			  | Can determine if "std(in|out|err)" getting redirected
+==================|=======================================================
+ file1 -ef file2  | file1 and file2 have the same inode numbers
+				  | (the 2 filenames refer to same file by hard linking)
+------------------|-------------------------------------------------------
+ file1 -nt file2  | file1 is newer than file2
+------------------|-------------------------------------------------------
+ file1 -ot file2  | file1 is older than file2
+==================|=======================================================
+     -b file      | file exists & is a block-special (device) file
+------------------|-------------------------------------------------------
+     -c file      | file exists & is a character-special (device) file
+------------------|-------------------------------------------------------
+     -d file      | file exists & is a directory
+------------------|-------------------------------------------------------
+     -e file      | file exists
+------------------|-------------------------------------------------------
+     -f file      | file exists & is a regular file
+------------------|-------------------------------------------------------
+     -g file      | file exists & is set-group-ID
+------------------|-------------------------------------------------------
+     -G file      | file exists & is owned by the effective group ID
+------------------|-------------------------------------------------------
+     -k file      | file exists & has its "sticky bit" set
+------------------|-------------------------------------------------------
+     -L file      | file exists & is a symbolic link
+------------------|-------------------------------------------------------
+     -O file      | file exists & is owned by the effective user ID
+------------------|-------------------------------------------------------
+     -p file      | file exists & is a named pipe
+------------------|-------------------------------------------------------
+     -s file      | file exists & has a length greater than zero
+------------------|-------------------------------------------------------
+     -S file      | file exists & is a network socket
+------------------|-------------------------------------------------------
+     -u file      | file exists & is setuid
+==========================================================================
+
+
+=============================================================================
+
+# String Expressions (compare strings)
+
+----------------------------------------------------------------------------
+    EXPRESSION		|  Is True if..
+====================|=======================================================
+      string        | string is not null
+--------------------|-------------------------------------------------------
+    -n string       | Length of string is greater than zero
+--------------------|-------------------------------------------------------
+    -z string       | Length of string is zero
+--------------------|-------------------------------------------------------
+ 				    | string1 and string2 are equal.
+ string1 = string2  | Single or Double equal signs may be used.
+ string1 == string2	| The use of [ == ] is supported by bash and is 
+ 					| generally preferred, but is not POSIX compliant
+--------------------|-------------------------------------------------------
+ string1 != string2 | string1 and string2 are NOT equal
+--------------------|-------------------------------------------------------
+ string1 > string2  | string1 sorts after string2 
+--------------------|-------------------------------------------------------
+ string1 < string2  | string1 sorts before string2
+============================================================================
+
+
+-> [ > , < ] OPERATORS MUST BE ESCAPED WITH A \BACKSLASH
+
+	-> IF NOT THEY WILL BE INTERPRETTED AS REDIRECTIONS
+
+	-> IN OTHER WORDS YOU RISK HOSING WHO KNOWS WHAT WITHOUT \ESCAPING
+
+
+=============================================================================
+
+# Integer Expressions (compare as int instead of str)
+
+===================================
+   EXPRESSION    |  Is True if..
+=================|=================
+  int1 -eq int2  | int1 == int2
+-----------------|-----------------
+  int1 -ne int2  | int1 != int2
+-----------------|-----------------
+  int1 -le int2  | int1 <= int2
+-----------------|-----------------
+  int1 -lt int2  | int1 <  int2
+-----------------|-----------------
+  int1 -ge int2  | int1 >= int2
+-----------------|-----------------
+  int1 -gt int2  | int1 >  int2
+===================================
+
+
+=============================================================================
+
+# A More Modern Version of test
+
+
+-> Newer bashes include a compound command which acts as an enhanced version of test 
+
+	 >>> [[ expression ]]
+
+	-> Like w/ test, expression evaluates to either a true or false result
+
+
+-> [[ ]] supports everything [] does with an string addition
+
+	 >>> string1 =~ regex
+
+
+-> This returns true if string1 is matched by the ERE regex
+
+	-> This greatly simplifies data validation
+
+	 >>> if [[ "$VAR" =~ ^-?[0-9]+$ ]]; then
+
+
+-> With the regex we are able to set bounds on int;
+
+-> i.e: only strings that begin with optional minus sign, followed by one or more numerals
+
+	-> Which also eliminates the possibility of empty strings
+
+
+-> Additionally, [[]] supports '==' pattern matching same as pathname expansion
+
+	 >>> FILE=foo.bar
+
+	 >>> if [[ "$FILE" == FOO.* ]]; then
+
+	 >>> echo "$FILE matches pattern 'foo.*'"
+
+	 >>> fi
+
+	-> This makes [[ ]] pretty useful for evaluating pathnames
+
+
+=============================================================================
+
+# (( )) - Designed for Integers
+
+
+-> Another compund command used for operating on integers (Chap.34)
+
+-> Another use is for 'arithmetic truth tests'
+
+	-> These return true if the result of the arithmetic evaluation is non-zero
+
+	 >>> if ((INT == 0)); then..
+
+	 >>> if ((INT < 0)) ; then..
+
+	 >>> if (( ((INT % 2)) == 0)); then..
+
+
+=============================================================================
+
+# Combining Expressions
+
+-> Expressions are combined using logical operators
+
+-> There are 3 logical operators for 'test' and '[[ ]]'
+
+	-> ( AND | OR | NOT )
+
+	-> test and [[]] use different operators to represent these operations
+
+---------------------
+* Logical Operators
+============================================
+  OPERATION  | [ test ] | [[ ]] and (( ))
+-------------|----------|-------------------
+     AND     |    -a    |       &&
+-------------|----------|-------------------
+     OR      |    -o    |       ||
+-------------|----------|-------------------
+     NOT     |    !     |       !
+============================================
+
+
+-> For standard compound expressions:
+
+	 >>> if [[ "$NUM" -gt "$PORT_MIN" && "$NUM" -le "$PORT_MAX"  ]]; then
+
+
+-> Easy to include negation ( !member of subset ):
+
+	 >>> if [[ ! ("$NUM" -gt "$PORT_MIN" && "$NUM" -le "$PORT_MAX") ]]; then
+
+
+=============================================================================
+
+# Contorl Operators: Another Way to Branch
+
+
+-> bash provides 2 control operators that can perform branching
+
+	-> Double ( && : AND ) and Double ( || : OR )
+
+	 >>> command1 && command2
+
+	 >>> command1 || command2
+
+
+-> With the AND( && ) operator, command2 executes:
+
+	-> If and ONLY IF command1 is SUCCESSFUL(0)
+
+
+-> With the OR( || ) operator, command2 executes:
+
+	-> If and ONLY IF command1 is UN-SUCCESSFUL(1)
+
+
+-> In practical terms it means the below is possible:
+
+	 >>> mkdir tmp_dir && cd tmp_dir
+
+	-> This creates a directory and only if thats successful does it execute cd
+
+
+-> To check for a directories existence before creating it:
+
+	 >>> [[ -d temp ]] || mkdir tmp_dir
+
+
+=============================================================================
+	
+-> Check bash man page for more info on:
+
+	-> Lists (covers the control operators || and &&)
+
+	-> Compound Commands (covers [[ ]], (( )) and 'if')
+
+	-> CONDITIONAL EXPRESSIONS
+
+	-> SHELL BUILTIN COMMANDS(covers test)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

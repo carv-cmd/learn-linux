@@ -1,0 +1,102 @@
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+            ---------------- Flow Controls ----------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+==================================================================
+
+# while 
+
+-----------------
+
+	 >>> while condition; do
+	 >>>	commands
+	 >>> done
+
+
+==================================================================
+
+# until
+
+-----------------
+
+	 >>> until condition; do
+	 >>>	commands
+	 >>> done
+
+
+==================================================================
+
+# for 
+
+-> By omitting the word list in a for loop, positional params are used instead
+
+----------------------------------------------
+
+-> Standard Syntax:
+
+	 >>> for variable [in words]; do
+	 >>>	commands
+	 >>> done
+
+----------------------------------------------
+
+-> There are many ways to create the loop iteratable
+	
+	-> Standard space delimited list
+
+	 >>> for i in A B C D; do echo $i; done
+	
+	-> Brace expansion methods
+	
+	 >>> for i in {A..D}; do echo $i; done
+
+	-> Command substitution works as well
+
+	 >>> for i in $(strings "$1"); do commands; done
+
+
+----------------------------------------------
+
+-> C-style Syntax
+
+	 >>> for (( expression1; expression2; expression3 )); do
+	 >>> 		commands
+	 >>> done
+
+
+-> Equivalent to the following in terms of behavior
+
+	 >>> (( expression1 ))
+	 >>> while (( expression2 )); do
+	 >>> 		commands
+	 >>> 		(( expression3 ))
+	 >>> done
+
+-> Where; 
+
+	-> expression1 is used to initialize the loop
+
+	-> expression2 is used to determine when the loop is finished
+
+	-> expression2 is carried out at the end of each loop iteration
+
+
+-> Example:
+
+	 >>> for (( i=0; i<5; i=i+1 )); do
+	 >>> 		echo $i
+	 >>> done
+
+
+----------------------------------------------
+
+
+----------------------------------------------
+
+
+
+
+
+

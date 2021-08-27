@@ -1,0 +1,30 @@
+--------------------------------------------------------
+--------------------------------------------------------
+
+-- Linux Wildcards / Globbing --
+
+--------------------------------------------------------
+--------------------------------------------------------
+
+-> '*'		 - matches any characters
+
+-> '?'		 - matches any single character
+
+-> [chars]	 - matches any character that is a member of the set of characters
+
+-> [!chars]	 - matches any character that is NOT a memeber of the set characters
+
+-> [[:class:]]	 - matches any character that is a member of the specified class
+
+-> [:alnum:]	 - matches any alphanumeric character
+
+-> [:alpha:]	 - matches any alphabetic character
+
+-> [:digit:]	 - matches any numeral
+
+-> [:lower:]	 - matches any lowercase letter
+
+-> [:upper:]	 - matches any uppercase letter
+
+--------------------------------------------------------
+--------------------------------------------------------

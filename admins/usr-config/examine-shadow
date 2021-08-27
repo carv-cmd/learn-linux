@@ -1,0 +1,135 @@
+#################################################################
+
+            ----- Examining "/etc/shadow" -----
+
+#################################################################
+
+-------------------------------------------------------------
+----------------------------------------------------------
+
+-> Encrypted file which stores the encrypted password info for user accounts
+
+
+-> In addition to storing the encrypted passwords;
+
+	-> /etc/shadow stores optional password aging or expiration information
+
+
+-> Introduction to the 'shadow' file came about for a few reasons
+
+	-> Largely Moores law and the ease of getting consumer `supercomputers`
+
+-> As well as legacy programs dependant on an open-to-all /etc/passwd file
+
+	-> Ide rather add a file w/ just encrpyted passwords then redesign legacy libraries
+
+
+-> Therefore the /etc/passwd is readable to all users
+
+	-> Only root or privileged programs are allowed to access data in /etc/shadow
+
+-> The various fields of a '/etc/shadow'
+
+	> Login Name 
+	> Encrypted Password
+	> Days since *epoch, that password was changed
+	> Days before password may be changed
+	> Days after which password must be changed
+	> Days before password is to expire that user is warned
+	> Days after password expires that account is disabled
+	> Days since *epoch, that account is disabled
+	> A reserved field
+
+*epoch: January 1, 1970; that password was changed
+
+Example User Entiry: [ melly ]
+
+	> melly:$1FD$FfIgpDmZwtT./geW:12830:0:99999:7:::
+
+	>> [ melly ]:[ $1FD$FfIgpDmZwtT./geW ]:[ 12830 ]:[ 0 ]:[ 99999 ]:[ 7 ]:[]:[]:[]
+
+
+#################################################################
+
+            ----- Examining "/etc/group" -----
+
+#################################################################
+
+-> '/etc/group' contains a listing of groups, w/ one group per line
+
+	-> Each entry has 4 standard fields, each colon-delimited, as before
+
+-> Each user on the host belongs to at least one group, 
+
+	-> That being the user's default group
+
+	-> Users can be assigned to additional groups as needed 
+
+
+-> Recall the '/etc/passwd' file contains the each users default 'group ID ( GID )'
+
+	-> This GID is mapped to the groups's name,
+
+	-> As well as other members of the group in the /etc/group file
+
+	-> The GID should be unique for each group 
+
+
+-> Row entry fields for individual item
+
+	> 'Group Name': The name of the group
+	> 'Group Password': Optional[ If set allows users who arent part of group to join ]
+	> 'Group ID ( GID )': The numerical equivalent of the group name 
+	> 'Group Members': A comma-separated list
+
+
+-> Sample '/etc/group' entry below;
+
+	> bin:x:1:bin,daemon
+
+
+-> Entry is for the 'bin' group
+
+	-> The GID for the group is 1, and its members are bin and daemon
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

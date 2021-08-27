@@ -1,0 +1,215 @@
+##########################################################
+
+         ----- Examining "/etc/passwd" -----
+
+##########################################################
+
+--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+# Examining 'user-group' Text Files
+-------------------------------------
+
+----------------
+## /etc/passwd
+~~~~~~~~~~~~~~~~
+-> This file stores the user's:
+
+	> Login
+	> Encrypted Password Entry
+	> UID
+	> Default GID
+	> Name (sometimes GECOS)
+	> Home Directory
+	> Login Shell
+
+
+-> Each [ /etc/passwd ] row entry is a user
+
+	-> Each column is one of the values listed above
+
+
+-> [  foo:x:1001:1001:Foo Bars:/home/foo:/bin/bash  ]
+
+==============================================================================
+ Username | Password | User ID | Group ID |  GECOCS  | Directory |  Shell
+----------|----------|---------|----------|----------|-----------|-----------
+   foo:   |    x:    |  1001:  |  1001:   | Foo Bars | /home/foo | /bin/bash   
+==============================================================================
+
+---------
+# FIELDS
+~~~~~~~~~
+
+---------------------------------------------------------------
+## Username: [ login field | account field ]
+
+-> Stores the name of the user on the system
+
+	-> Must be a unique string & uniquely identifies a user to the system 
+
+	-> Different places use different methods of generating user login names
+
+-> A common approach is to use the [ (B)en (carver) XX... ]: 
+
+	-> bcarver-69420
+
+	-> Just one of the countless approaches
+
+---------------------------------------------------------------
+## Password Field: contains users encrypted password
+
+-> Most modern systems contain an [ 'x' ] in this field
+
+	-> Indicating [ shadow passwords ] are being used on the system
+
+-> EVERY regular user or human owned acct on the host should have a password
+
+	-> One open user account could be a backdoor into a 'highly secure' system
+
+	-> Weak passwords are almost no different from no passwords as well...
+
+-> When a password is entered; its encrypted and that value is left public
+	
+	-> "Data Encruption Standard ( DES )" is used to perform this
+
+-> DES in concept works somewhat like hash-cash
+
+	-> Whenever a password is entered after that, its ecrypted after entry
+
+	-> This value is compared against the stored encrypted value, etc, etc
+
+-> Important part is that its cheap to enter one password with DES,
+
+	-> A dictionary attack with 10k attempts planned, not so much
+
+
+---------------------------------------------------------------
+## User ID Field: stores the unique identifier assigned to user
+
+-> This UID is referenced by the OS and applications to determine privilages
+
+	-> Its the numerical equivalent of the username field
+
+	-> UID's must also be unique for each and every user (except UID 0)
+
+
+-> Any user with UID 0 has root(admin) access and thus 'the reins'
+
+	-> Usually the only user who has this specific UID has the login root
+
+	-> Its considered bad practice to allow any other users to have UID 0
+
+---------------------------------------------------------------
+## Group ID Field: primary group 
+
+-> Numerical equivalent of the primary group to which the user belongs
+
+	-> This field also plays an important role in determining user access privileges
+
+	-> In addition to a primary, users can belong to other groups as well (/etc/groups)
+
+---------------------------------------------------------------
+## GECOS/Name Field: optional personal data field
+
+-> These fields can be left blank
+
+-> They also work well for commenting an accounts purpose
+
+	-> Future housekeeping is much simpler 
+
+---------------------------------------------------------------
+## Directory Field: lcoation of users home directory
+
+-> 'Usually' the users home directory, 
+
+	-> But can be any arbitrary location on the system
+
+	-> Just a place for config files unique to that user
+
+-> Along with configs its typically the users home directory as well
+
+	-> This means [documents, pictures, music, etc] goes in here
+
+-> "Home Directories" just give users a customizable environment
+
+	-> This is so users can customize w/o disrupting other users on the system
+
+-> Applies even if multiple users are logged into the same system at the same time
+
+-> [ /home ] is just the convention, its entirely arbitrary
+
+	-> The system doesnt care where the home directory is placed 
+
+	-> As long as the location is listed in [ /etc/passwd ]:directory
+
+-> Typically best to reserve other locations only for special sys-services
+
+	-> Such as a webserver, serving from [ /var/www/ ]
+
+-----------------------
+## Startup Scripts ##
+-----------------------
+-> When creating a user account, a set of default dot files are also created
+
+	-> Mostly for convenience, but the user mgmt tools later on do this for us
+
+-> The default files are stored under the [ /etc/skel ] directory
+
+---------------------------------------------------------------
+##  Shell Field: users default shell 
+
+-> To see shell options on the host view the [ /etc/shells ] file
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+

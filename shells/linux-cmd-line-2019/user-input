@@ -1,0 +1,149 @@
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+	-------------- Reading Keyboard Input -----------------
+--------------------------------------------------------------------
+--------------------------------------------------------------------
+
+-> read: read values from standard input
+
+
+-> The read builtin is used to read a single line of standard input 
+
+	-> This command can be used to read keyboard input,
+
+	-> Or when redirection is used; a line of data from a file
+
+
+-> 'read' has the following syntax: 
+
+	 >>> read [ -options ] [variable...]
+
+	-> Where options is one or more of the table entries below 
+
+	-> Where variable is the name of one or more vars to hold the input value
+
+	*> If no var is supplied, shell variable $REPLY contains the daterline
+
+
+-> Passing echo with the -n option shell supresses the tralling newline:
+
+	 >>> echo -n "Question... "
+
+-> read can assign input to multiple variables, as such below:
+
+	 >>> echo -n "Enter one or more values -> "
+	 
+	 >>> read var1 var2 var3 var4 var5 var6
+
+	 >>> echo "var1 = '$var1'"
+	 >>> echo "var2 = '$var2'"
+	 >>> echo "var3 = '$var3'"
+	 >>> echo "var4 = '$var4'"
+	 >>> echo "var5 = '$var5'"
+	 >>> echo "var6 = '$var6'"
+
+===============================
+    OPTION    | DESCRIPTION
+--------------|-------------------------------------------------------
+   -a array   | Assign the input to an array, starting w/ index zero
+--------------|-------------------------------------------------------
+ -d delimiter | First character in the string delimiter is used to 
+			  | indicate the end of input, rather than a newline char 
+--------------|-------------------------------------------------------
+      -e      | Use Readline to handle input. This permits input
+			  | editing in the same manner as the command line
+--------------|-------------------------------------------------------
+   -i string  | Use string as a default reply if the user simply 
+			  | presses enter. Requires the -e option
+--------------|-------------------------------------------------------
+    -n num    | Read num characters of input, rather than entire line
+--------------|-------------------------------------------------------
+   -p promt   | Display a prompt for input using the string prompt
+--------------|-------------------------------------------------------
+      -r      | Raw mode. Do not interpret backslashes as escapes
+--------------|-------------------------------------------------------
+      -s      | Silent mode. Do not echo chars to the display as
+			  | they're typed. Useful for confidential input fields
+--------------|-------------------------------------------------------
+  -t seconds  | Timeout. Terminate input after seconds
+			  | read returns non-zero exit status if input times out
+--------------|-------------------------------------------------------
+     -u fd    | Use input from file descriptor fd, rather than stdin
+----------------------------------------------------------------------
+       
+
+====================================================================
+====================================================================
+
+# IFS
+
+---------------------------------------------------------
+
+-> IFS(Internal Field Separator) performs word splitting on read input
+
+	-> Behavior configured by shell variable IFS
+	
+	-> IFS default = space, tab character, and a newline character
+
+-> In other words change IFS to a single colon
+
+	-> Now we can easily load the passwd file into 'read' variables 
+
+
+---------------------------------------------------------
+
+-> The script [ ~/bin/field-reader ] demonstrates this
+
+-> The 2 odd lines described below:
+
+	 >>> file_info="$(grep "^$user_name:" $FILE)"
+
+	-> This assigns grep to the variable 'file_info'
+	-> Regex used by grep assures the user name only matches a single value
+
+---------------------------------------------------------
+
+	 >>> IFS=":" read user pw uid gid name home shell <<< "$file_info"
+
+	-> The ( <<< ) operator indicates a "here string"
+	
+	-> Much like a here doc only it consists of a single one line string
+	
+	-> We have to use here-strings when we would normally pipe into read
+
+		-> De-Nada: echo "$file_info" | IFS=":" read user ...
+
+---------------------------------------------------------
+
+
+====================================================================
+====================================================================
+
+# Validating Input
+
+-> See ~/bin/validation station for details
+ 
+
+====================================================================
+====================================================================
+
+# Menus
+
+-> 'Menu-Driven interactivity is a common implementation:
+
+	> Please Select:
+		
+		> 1). Display System Information
+
+		> 2). Display Disk Space
+
+		> 3). Display Home Space Utilization
+
+		> 0). Quit
+
+	> Enter Selection [0-3]: ______
+
+
+
+
+

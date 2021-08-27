@@ -1,0 +1,140 @@
+----------------------------------------------------------------
+----------------------------------------------------------------
+------------------ Writing Shell Scripts -----------------------
+----------------------------------------------------------------
+----------------------------------------------------------------
+
+-> A functional shell script requires 3 things:
+
+	1). Write a Script: 
+		
+		-> (vim|gedit|kate) - something w/ syntax highlighting
+
+	2). Make the Script Executable:
+
+		-> i.e. need to set the script file's permissions to allow execution
+
+	3). Put the Script Somewhere the Shell can Find it:
+
+		-> Shell auto-searchs certain directories for executables
+		
+		-> This only happens when no explicit pathname is specified 
+
+		-> Therefore, best practice is to just put the scripts in those directories
+
+
+----------------------------------------------------------------
+
+-> Our script file should have the header below, aka 'shebang'
+
+	> #! /bin/bash
+
+-> Then the body obviously
+
+
+----------------------------------------------------------------
+
+# Executable Permissions
+
+-> Can easily set these permissions with chmod, the 2 most common options below:
+
+	-> '755', '700'
+
+	 >>> chmod 755 script-file
+
+
+----------------------------------------------------------------
+
+# Script File Location
+
+-> For scripts that only we intend to use:
+
+	-> Located@: # ~/bin
+
+-> For scripts that everyone systemwide can use:
+
+	-> Located@: # /usr/local/bin
+
+-> Scripts for use by the irl sysAdmin:
+
+	-> Located@: /usr/local/sbin
+
+-> In most cases locally supplied software shouldnt go in '/bin' or '/sbin' directories:
+
+	-> Instead locate @: /usr/local
+
+* Check "Linux File Hierarchy Standard" for more details
+
+
+----------------------------------------------------------------
+
+# Formatting Tricks
+
+-----------------------------
+-> Long Option Names
+
+	-> Short-Option names are nice when calling the command
+
+	-> Long-Option names are nice when trying to read the command script
+
+
+------------------------------------------
+-> Indentation and Line-Continuation
+
+	-> By using line continuations(backslash)\
+	   	we can break a one liner into 5 lines\
+			largely improving script readability\
+				chap17 'long find' example below
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+find sandbox \( -type f -not -perm 0600 -exec chmod 0600 '{}' ';' \) -or \( -type d -not -perm 0700 -exec chmod 0700 '{}'';' \) 
+----------------------------------------------------------------------------------------------------------------------------------
+find sandbox \
+	\( \
+		-type f \
+		-not -perm 0600 \
+		-exec chmod 0600 '{}' ';' \
+	\) \
+	-or \
+	\( \
+		-type d \
+		-not -perm 0700 \
+		-exec chmod 0700 '{}' ';' \
+	\)
+----------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
