@@ -1,19 +1,37 @@
 # Performance Monitoring 101
----
 > * ***Credits to [Brendan Gregg](https://brendangregg.com) for his amazing work in this area.***
-> * ***Please watch his video, [Linux Performance Tools(1-2)](https://www.youtube.com/watch?v=D53T1Ejig1Q)
+> * ***Please watch his videos, [Linux Performance Tools(1-2)](https://www.youtube.com/watch?v=D53T1Ejig1Q)
 > for an in-depth description of these tools and best practices.***
 > * ***These are just my reference points.***
 
 ---
-## Workload Characterization Method
+## Perf Mon Methodologies
+* Problem Statement Method
+* Workload Characterization Method
+* USE Method
+* Off-CPU Analysis
+* CPU Profile Method
+* Active Benchmarking
+* Static Performance
+
+---
+### Problem Statement Method
+1. What makes you **think** there is a perfomance problem?
+2. Hs the system **ever** performed well?
+3. What **changed** recently? (software? hardware? load?)
+4. Can the performance degradation be expressed in terms of **laency** or runtime?
+5. Does the problem effect **other** people or applications (or just ticket submitter)?
+6. What is the **environment**? Software, hardware, instance types? Versions? Configuration?
+
+---
+### Workload Characterization Method
 1. ***Who*** is causing the load? *PID, UID, IP, addr, ...*
 2. ***Why*** is the load called? *code path, stack trace*
 3. ***What*** is the load? *IOPS, tput, type, r/w*
 4. ***How*** is the load changing over time?
 
 ---
-## The USE Method
+### The USE Method
 *"Start with questions, then find the tools"*
 
 * If possible, create a block diagram detailing: 
@@ -53,8 +71,8 @@
  
 | *INTERMEDIATE* | Description |
 |:---:|:---|
-| `strace` | Trace system calls and signals |
-| `tcpdump` | Dump traffic on a network |
+| `strace` | Trace system calls and signals (lot of overhead) |
+| `tcpdump` | Dump traffic on a network (poor scalability) |
 | `netstat` | Print network conns, routing tables, interface stats, masquerade conns, and multicast memberships |
 | `nicstat` | Print network traffic statistics (`enicstat`) |
 | `pidstat` | Report statistics for Linux tasks |
@@ -65,7 +83,12 @@
 > |:---|:---|
 > | `strace -tttT -p 313` | time_since_epoch, syscall_time(s), pid |
 > | `TMPF=/tmp/out.tcpdump;` | `tcpdump -i eth0 -w $TMPF -Z root; tcpdump -nr $TMPF \| head; rm $TMPF` |
-> | `sar -n DEV 1` | report_network_stats_on_keyword |
+> | `netstat` | -s=protocol_stats, -i=iface_stat, -r=route_table, -p=proc_details, -c=interval |
+> | `pidstat -(t\|d)` | by_thread, disk_io |
+> | `swapon -s` | show_swap_dev_usage *(if enabled)* |
+> | `lsof -iTCP -sTCP:ESTABLISHED` | for some apps, this will return all active network connections |
+> | `sar -n DEV` | archive: network_stats_on_dev |
+> | `sar -n TCP,ETCP,DEV 1` | live_poll: network_stats_on_tcp/etcp/dev |
 
 
 ---
