@@ -131,8 +131,17 @@
 
 ---
 ## Benchmarking Tools
-* The degree of accuracy is that of the scientific methods used in benchmarking
-
+>
+> * The conclusions gathered from benchmarking must be used with caution.
+> * Poor benchmarking methods result in arbitrary results interpretted arbitrarily.
+> * Proper scientific methodologies must be applied in both trial procedures and pre/post analysis.
+> 
+> * This still doesnt account for load surges, latency, crashes, etc, etc, etc
+>   * Benchmarking works for comparing new hardware
+>   * Dont consider this an umbrella for software
+>   * Certainly dont try this in production if you value your job
+>   * See Brendans videos linked above for detailed instructions on how to apply these tests.
+>
 | Tool | Description |
 |:---:|:---|
 |***Multi***|
@@ -203,7 +212,7 @@
 | `cat proc/scsi/scsi` | File system capacity |
 | `isscsi` | File system and volume configuration |
 | `netstat -rn` or `ip route get ip_addr` | Route table |
-| State of hardware |
+| `?` | State of hardware |
 | `dmesg` | System messages |
 | `ifconfig -a; ip link` | Network interface config |
 | `df -h` | File system capacity |
@@ -212,5 +221,5 @@
 | `numactl -s; numactl -H` | NUMA Config |
 | `ispci` | PCI info | 
 | `lsmod` | Installed kernel modules |
-| Root crontab config | `crontab -l` |
-| Services | `services --status-all` |
+| `crontab -l` | Root crontab config |
+| `services --status-all` | Services |
