@@ -197,20 +197,20 @@
 
 | **Parameter** | Command |
 |:---|:---:|
-| CPU types & flags | `cat /proc/cpuinfo` |
-| CPU frequency scaling config | `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_{available_frequencies,governor}` |
-| Storage devices | `cat proc/scsi/scsi` |
-| File system capacity | `cat proc/scsi/scsi` |
-| File system and volume configuration | `isscsi` |
-| Route table | `netstat -rn` or `ip route get ip_addr` |
+| `cat /proc/cpuinfo` | CPU types & flags |
+| `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_{available_frequencies,governor}` | CPU frequency scaling config |
+| `cat proc/scsi/scsi` | Storage devices |
+| `cat proc/scsi/scsi` | File system capacity |
+| `isscsi` | File system and volume configuration |
+| `netstat -rn` or `ip route get ip_addr` | Route table |
 | State of hardware |
-| System messages | `dmesg` |
-| Network interface config | `ifconfig -a; ip link` |
-| File system capacity | `df -h` |
-| Volume config | `mdadm --misc -D /dev/md0` |
-| Storage device info | `smartctl` |
-| NUMA Config | `numactl -s; numactl -H` |
-| PCI info | `ispci` | 
-| Installed kernel modules | `lsmod` |
+| `dmesg` | System messages |
+| `ifconfig -a; ip link` | Network interface config |
+| `df -h` | File system capacity |
+| `mdadm --misc -D /dev/md0` | Volume config |
+| `smartctl` | Storage device info |
+| `numactl -s; numactl -H` | NUMA Config |
+| `ispci` | PCI info | 
+| `lsmod` | Installed kernel modules |
 | Root crontab config | `crontab -l` |
 | Services | `services --status-all` |
