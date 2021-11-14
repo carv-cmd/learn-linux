@@ -131,6 +131,8 @@
 
 ---
 ## Benchmarking Tools
+* The degree of accuracy is that of the scientific methods used in benchmarking
+
 | Tool | Description |
 |:---:|:---|
 |***Multi***|
