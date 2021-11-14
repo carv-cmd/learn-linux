@@ -129,7 +129,6 @@
 | `dtrace4linux` | # WHATIS? |
 ||
 | ***--examples*** | ***see man $cmd*** |
-|:---|:---|
 | `ss -mop` | sock_mem_usage, timer_info, proc_using_sock |
 | `ss -i` | internal_tcp_info |
 | `iptraf-ng` | Install from apt sources |
@@ -246,10 +245,10 @@
 | `lsmod` | Installed kernel modules |
 | `crontab -l` | Root crontab config |
 | `services --status-all` | Services |
-||
 | `cat /proc/cpuinfo` | CPU types & flags |
-| `cat /sys/devices/system/cpu/cpu0/cpufreq/` | > `$icpu` |
-| `$icpu/scaling_{available_frequencies,governor}` | CPU frequency scaling config |
-| `$icpu/scaling_available_frequencies` | CPU frequency scaling config |
+||
+| `cat /sys/devices/system/cpu/cpu0/cpufreq/` | > `$ICPU` |
+| `$ICPU/scaling/available_frequencies` | CPU frequency scaling info |
+| `$ICPU/scaling/governor` | CPU frequency scaling config |
 
 
