@@ -51,8 +51,9 @@
 |---|---|
 | Observability | Watch activity. Usually safe (dependent on resource overhead) |
 | Benchmarking | Load test: Use caution w/ production tests (contention issues) |
-| Tuning | Changes can hurt perf!!! (apparent now or later under load...) |
+| Tuning | Changes can hurt performance!!! (now or later under load...) |
 | Static | Check configuration: Should be safe. |
+
 
 ---
 ## Observability Tools
@@ -102,7 +103,7 @@
 | ***COMMAND*** | ***DESCRIPTION*** |
 |:---|:---|
 ||
-| ***misc*** |
+| ***Misc*** |
 | `ltrace` | A library call tracer |
 | `ss` | Another utility to investigate sockets |
 | `iptraf-ng` | Histogram packet sizes gathered from iface network traffic |
@@ -139,6 +140,7 @@
 | `tiptop` | May be a wild ride compiling |
 | `rdmsr` | Model Specific Registers(MSRs), unlike PMCs, can be read by default in Xen guests |
 
+
 ---
 ## Benchmarking Tools
 >
@@ -148,7 +150,6 @@
 > * Please see Brendans [Linux Performance Tools(Part 2)](https://www.youtube.com/watch?v=zrr2nUln9Kk)
 > for detailed instruction on this.
 >
-
 ### Instead use Actvie Benchmark Method
 1. Run the benchmark for hours
 2. While running, analyze and confirm the performance limiter using *observability tools*
@@ -186,9 +187,24 @@
 | `mtr` | A network diagnsostic tool |
 | `pchar` | apt upstream |
 
+
 ---
 ## Tuning Tools
-| Tool | Description |
+
+### Tuning Methods?
+* Just follow scientific method:
+  1. Question
+  2. Hypothesis
+  3. Prediction
+  4. Test
+  5. Analyze
+
+* Consider the risks associated with tuning and what else it might effect.
+* Use *observtional* and *benchmarking* tools before any tuning. 
+* The results from those tools should be your tuning guide.
+  * Make sure the benchmark was done correctly!!!
+
+| ***Tool*** | ***Description*** |
 |:---:|:---|
 ||
 |***Generic Interfaces***|
@@ -231,6 +247,7 @@
 
 | ***Command*** | ***Functionality*** |
 |:---|:---:|
+||
 | `cat proc/scsi/scsi` | Storage devices |
 | `cat proc/scsi/scsi` | File system capacity |
 | `isscsi` | File system and volume configuration |
