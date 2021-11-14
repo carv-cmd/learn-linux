@@ -145,13 +145,13 @@
 |***App/lib***|
 | `jmeter` | apt upstream |
 | `openssl` | OpenSSL command line tool |
-| `ab` | ? |
-| `wrk` | ? |
+| `ab` | # WHATIS? |
+| `wrk` | # WHATIS? |
 |***Networking***|
 | `ping` | Send ICMP ECHO_REQUEST to network hosts
 | `hping3` | apt upstream |
 | `iperf` | apt upstream |
-| `ttcp` | get source |
+| `ttcp` | # WHATIS? |
 | `traceroute` | apt upstream |
 | `mtr` | A network diagnsostic tool |
 | `pchar` | apt upstream |
@@ -183,8 +183,8 @@
 | `route` | Show/manipulate the IP routing table |
 |***Dynamic***|
 | `patching` | Appl a diff file to an original? |
-| `stap` | 
-| `kpatch` |
+| `stap` | # WHATIS? |
+| `kpatch` | # WHATIS? |
 
 ---
 ## Static Performance Tuning
@@ -192,11 +192,23 @@
 * Methodology by Richard Eiling (2000)
 
 * Check the static state and configuration of the system:
-  - CPU types & flags
-  - CPU frequency scaling config
-  - Storage devices
-  - File system capacity
-  - File system and volume configuration
-  - Route table
-  - State of hardware
-  - etc
+
+| **Parameter** | Command |
+|:---|:---:|
+| CPU types & flags | `cat /proc/cpuinfo` |
+| CPU frequency scaling config | `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_{available_frequencies,governor}` |
+| Storage devices | `cat proc/scsi/scsi` |
+| File system capacity | `cat proc/scsi/scsi` |
+| File system and volume configuration | `isscsi` |
+| Route table | `netstat -rn` or `ip route get ip_addr` |
+| State of hardware |
+| System messages | `dmesg` |
+| Network interface config | `ifconfig -a; ip link` |
+| File system capacity | `df -h` |
+| Volume config | `mdadm --misc -D /dev/md0` |
+| Storage device info | `smartctl` |
+| NUMA Config | `numactl -s; numactl -H` |
+| PCI info | `ispci` | 
+| Installed kernel modules | `lsmod` |
+| Root crontab config | `crontab -l` |
+| Services | `services --status-all` |
