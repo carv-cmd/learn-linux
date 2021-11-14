@@ -53,7 +53,7 @@
 
 ---
 ## Observability Tools
-| *BASIC* | Description |
+| *BASIC* | DESCRIPTION |
 |:---:|:---|
 | `uptime` | Tell how long the system has been running |
 | `top` | Display Linux processes. (or `htop`) |
@@ -68,8 +68,8 @@
 > | `vmstat -Sm 1` | define_display_unit, slabinfo |
 > | `iostat -xmdz 1` | extended_stats, mbps_format, dev_utilization, omit_sleeping_devs |
 > | `mpstat -P ALL 1` | cpu_cores_to_monitor |
- 
-| *INTERMEDIATE* | Description |
+---
+| *INTERMEDIATE* | DESCRIPTION |
 |:---:|:---|
 | `strace` | Trace system calls and signals (lot of overhead) |
 | `tcpdump` | Dump traffic on a network (poor scalability) |
@@ -89,12 +89,71 @@
 > | `lsof -iTCP -sTCP:ESTABLISHED` | for some apps, this will return all active network connections |
 > | `sar -n DEV` | archive: network_stats_on_dev |
 > | `sar -n TCP,ETCP,DEV 1` | live_poll: network_stats_on_tcp/etcp/dev |
-
-
+---
+| *ADVANCED* | DESCRIPTION |
+|:---:|:---|
+| ***misc*** |
+| `ltrace` | A library call tracer |
+| `ss` | Another utility to investigate sockets |
+| `iptraf-ng` | Histogram packet sizes gathered from iface network traffic |
+| `ethtool` | Query or control network driver and hardware settings (mostly tuning) |
+| `slabtop` | Display kernel slab cache information in real time |
+| `pcstat` | Show page cache residency by file. (dbs monitoring) |
+| `iotop` | Block device I/O (disk) by process |
+| `/proc` | Many raw kernel counters |
+| `blktrace` | Block I/O event tracer (apt install) |
+| `snmpget` | SNMP network host stats (compile) |
+| `lldptool` | Can get LLDP broadcast stats (compile) |
+| ***CPU Performance Counters*** |
+| `perf_events` | Performance analysis tools for Linux i.e. `perf` |
+| `tiptop` | IPC by process %MISS, %BUS |
+| `rdmsr` | Use `rdmsr` from the *msr-tools* package to read MSRs |
+| `pmu-tools` | On-and-Off core CPU counter tools |
+| ***Advanced Tracers*** |
+| `perf_events` ||
+| `ftrace` | # LOOKUP |
+| `eBPF` | # LOOKUP |
+| `SystemTap` | # LOOKUP |
+| `ktap` | # LOOKUP |
+| `LTTng` | # LOOKUP |
+| `dtrace4linux` | # LOOKUP |
+| `sysdig` | # INSTALL |
+> | **--examples** | ***see man $cmd*** |
+> |:---|:---|
+> | `ss -mop` | sock_mem_usage, timer_info, proc_using_sock |
+> | `ss -i` | internal_tcp_info |
+> | `iptraf-ng` | Install from apt sources |
+> | `iotop` | Needs kernel support enabled: CONFIG_TASK_IO_ACCOUNTING |
+> | `pcstat` | Download/clone from github |
+> | `perf_events` | Usually added by 'linux-tools-common' |
+> | `tiptop` | May be a wild ride compiling |
+> | `rdmsr` | Model Specific Registers(MSRs), unlike PMCs, can be read by default in Xen guests |
 ---
 ## Benchmarking Tools
 | Tool | Description |
-|---|---|
+|:---:|:---|
+|***Multi***|
+| `UnixBench` ||
+| `lmbench` |
+| `sysbench` |
+| `perf bench` |
+|***FS/Disk***|
+| `dd` |
+| `hdparm` |
+| `flo` |
+|***App/lib***|
+| `ab` |
+| `wrk` |
+| `jmeter` |
+| `openssl` |
+|***Networking***|
+| `ping` |
+| `hping3` |
+| `iperf` |
+| `ttcp` |
+| `traceroute` |
+| `mtr` |
+| `pchar` |
 
 ---
 ## Tuning Tools
