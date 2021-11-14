@@ -68,6 +68,7 @@
 > | `vmstat -Sm 1` | define_display_unit, slabinfo |
 > | `iostat -xmdz 1` | extended_stats, mbps_format, dev_utilization, omit_sleeping_devs |
 > | `mpstat -P ALL 1` | cpu_cores_to_monitor |
+
 ---
 | *INTERMEDIATE* | DESCRIPTION |
 |:---:|:---|
@@ -89,6 +90,7 @@
 > | `lsof -iTCP -sTCP:ESTABLISHED` | for some apps, this will return all active network connections |
 > | `sar -n DEV` | archive: network_stats_on_dev |
 > | `sar -n TCP,ETCP,DEV 1` | live_poll: network_stats_on_tcp/etcp/dev |
+
 ---
 | *ADVANCED* | DESCRIPTION |
 |:---:|:---|
@@ -110,14 +112,12 @@
 | `rdmsr` | Use `rdmsr` from the *msr-tools* package to read MSRs |
 | `pmu-tools` | On-and-Off core CPU counter tools |
 | ***Advanced Tracers*** |
-| `perf_events` ||
-| `ftrace` | # LOOKUP |
-| `eBPF` | # LOOKUP |
-| `SystemTap` | # LOOKUP |
-| `ktap` | # LOOKUP |
-| `LTTng` | # LOOKUP |
-| `dtrace4linux` | # LOOKUP |
-| `sysdig` | # INSTALL |
+| `ftrace` | # WHATIS? |
+| `eBPF` | # WHATIS? |
+| `SystemTap` | # WHATIS? |
+| `ktap` | # WHATIS? |
+| `LTTng` | # WHATIS? |
+| `dtrace4linux` | # WHATIS? |
 > | **--examples** | ***see man $cmd*** |
 > |:---|:---|
 > | `ss -mop` | sock_mem_usage, timer_info, proc_using_sock |
@@ -125,48 +125,78 @@
 > | `iptraf-ng` | Install from apt sources |
 > | `iotop` | Needs kernel support enabled: CONFIG_TASK_IO_ACCOUNTING |
 > | `pcstat` | Download/clone from github |
-> | `perf_events` | Usually added by 'linux-tools-common' |
+> | `perf_events` | Usually added by 'linux-tools-common' (includes `perf`) |
 > | `tiptop` | May be a wild ride compiling |
 > | `rdmsr` | Model Specific Registers(MSRs), unlike PMCs, can be read by default in Xen guests |
+
 ---
 ## Benchmarking Tools
 | Tool | Description |
 |:---:|:---|
 |***Multi***|
-| `UnixBench` ||
-| `lmbench` |
-| `sysbench` |
-| `perf bench` |
+| `UnixBench` | get source |
+| `lmbench` | apt upstream |
+| `sysbench` | apt upstream |
+| `perf bench` | General framework for benchmark suites |
 |***FS/Disk***|
-| `dd` |
-| `hdparm` |
-| `flo` |
+| `dd` | disk destroy? |
+| `hdparm` | get/set SATA/IDE device parameters |
+| `fio` | apt upstream |
 |***App/lib***|
-| `ab` |
-| `wrk` |
-| `jmeter` |
-| `openssl` |
+| `jmeter` | apt upstream |
+| `openssl` | OpenSSL command line tool |
+| `ab` | ? |
+| `wrk` | ? |
 |***Networking***|
-| `ping` |
-| `hping3` |
-| `iperf` |
-| `ttcp` |
-| `traceroute` |
-| `mtr` |
-| `pchar` |
+| `ping` | Send ICMP ECHO_REQUEST to network hosts
+| `hping3` | apt upstream |
+| `iperf` | apt upstream |
+| `ttcp` | get source |
+| `traceroute` | apt upstream |
+| `mtr` | A network diagnsostic tool |
+| `pchar` | apt upstream |
 
 ---
 ## Tuning Tools
 | Tool | Description |
-|---|---|
+|:---:|:---|
+|***Generic Interfaces***|
+| `sysctl` | Configure kernel parameters at runtime |
+| `/sys` |
+|***Applications***|
+| `app.conf` | use the applications own configurations |
+|***CPU/Scheduler***|
+| `nice` | Run a program with modified scheduling priority |
+| `renice` | Alter priority of running processes |
+| `taskset` | Set or retrieve a process's CPU activity |
+| `ulimit` | Get and Set user limits |
+| `chcpu` | Configre CPUs |
+|***Storage***|
+| `tune2fs` | Adjust tunable filesystem parameters on ext2/ext3/ext4 filesystems |
+| `ionice` | Set or Get process I/O scheduling class and priority |
+| `hdparm` | get/set SATA/IDE device parameters |
+| `blockdev` | Call block device ioctls from the command line |
+|***Network***|
+| `ethtool` | Query or control network driver and hardware settings |
+| `tc` | Show/manipulate traffic control settings |
+| `ip` | Show/manipulate routing, network devices, interfaces and tunnels |
+| `route` | Show/manipulate the IP routing table |
+|***Dynamic***|
+| `patching` | Appl a diff file to an original? |
+| `stap` | 
+| `kpatch` |
 
 ---
-## Static Tools
-| Tool | Description |
-|---|---|
+## Static Performance Tuning
+*"Ask what can be checked on the system without load?"*
+* Methodology by Richard Eiling (2000)
 
-
-
-
-
-
+* Check the static state and configuration of the system:
+  - CPU types & flags
+  - CPU frequency scaling config
+  - Storage devices
+  - File system capacity
+  - File system and volume configuration
+  - Route table
+  - State of hardware
+  - etc
