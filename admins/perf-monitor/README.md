@@ -1,4 +1,5 @@
 <!-- ![add_image_format](https://path/to/img.com) -->
+<!-- add brendans powerpoint slides graphing tools to sys hardware -->
 
 # Performance Monitoring 101
 > * ***Credits to [Brendan Gregg](https://brendangregg.com) for his amazing work in this area.***
