@@ -34,8 +34,9 @@
 4. ***How*** is the load changing over time?
 
 ---
-### The USE Method
+### [The USE Method](https://www.brendangregg.com/usemethod.html)
 *"Start with questions, then find the tools"*
+* [USE Method Rosetta Stone](https://www.brendangregg.com/USEmethod/use-rosetta.html)
 
 #### If possible, create a block diagram detailing: 
 * Host ***system/software/environment*** with ***all associated resources***.
@@ -150,7 +151,7 @@
 > * Please see Brendans [Linux Performance Tools(Part 2)](https://www.youtube.com/watch?v=zrr2nUln9Kk)
 > for detailed instruction on this.
 >
-### Instead use Actvie Benchmark Method
+### Instead use [Actvie Benchmark Method](https://www.brendangregg.com/activebenchmarking.html)
 1. Run the benchmark for hours
 2. While running, analyze and confirm the performance limiter using *observability tools*
    * **Disk** Benchmark: run: `iostat`, ...
