@@ -3,9 +3,13 @@
 
 # Performance Monitoring 101
 > * ***Credits to [Brendan Gregg](https://brendangregg.com) for his amazing work in this area.***
-> * ***Please watch his videos, [Linux Performance Tools(part 1-2)](https://www.youtube.com/watch?v=FJW8nGV4jxY)
-> for an in-depth description of these tools and best practices using them. 
-> These are just my personal reference points and a small fraction of what he covers.***
+> * ***Please watch the videos, 
+> [Linux Performance Tools(part 1-2)](https://www.youtube.com/watch?v=FJW8nGV4jxY) 
+> for an in-depth description of these tools and best practices using them.***
+> * ***Additionally check out his 
+> [YouTube channel](https://www.youtube.com/channel/UCxzogoHFu8-1H9u522wVQpQ)
+> if you want to stop wasting hours diagnosing resource hogs.***
+> * ***These are just my personal reference points and a small fraction of what he covers.***
 
 ---
 ## Perf Mon Methodologies
