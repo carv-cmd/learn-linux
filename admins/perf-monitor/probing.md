@@ -1,4 +1,11 @@
 # Advanced Monitoring
+> * ***See README for credits.***
+> * ***This reference doc includes 
+> [Brendan's](https://www.brendangregg.com/overview.html)
+> visualization software
+> [FlameGraphs](https://github.com/brendangregg/FlameGraph).***
+> * ***Again please visit those links for detailed explanations of these tools and methodologies.***
+---
 
 ## Tracing
 * Statically placed logical points in the kernel to track.
@@ -17,36 +24,40 @@
 | `scsi` | Device drivers |
 | `irq` | Device drivers |
 
+---
 ### Choosing a Tracer
-* First study what Linux already has built in:
-   * `perf_events`
-   * `ftrace`
-   * `eBPF`
-   * etc
 
 *Use this small python sample code to help pick a tracer:*
 ```python
-if linux_builtins == not_sufficient:
-   return (SystemTap, LTTng)
+# First study what your Linux distro already has builtin/upstream.
+# Again see Brendans work. This is my reference.
+tracers = {
+    'builtins': ['ftrace', 'perf_events', 'eBPF', 'sysdig'], 
+    'compiled': ['SystemTap', 'LTTng', 'ktap', 'dtrace4linux', 'OEL DTrace']
+    }
+
+if builtins not sufficient_for_needs:
+   return SystemTap, LTTng
 else
-   if need == [live_tracing, counting]:
-      return (ftrace, perf_events)
+   if needs in ['Live-Tracing', 'Counting']:
+      return ftrace, perf_events
       
-   if need == [PMCs, stack_profiling, trace_dump_analyze]:
+   if needs in ['PMCs', 'Stack-Profiling', 'Trace-Dump-Analyze']:
       return perf_events
       
-   if need == [in_kernel_summaries]:
+   if needs in ['In-Kernel-Summaries']:
       return eBPF
 ```
 * `ftrace`, `perf_events`, `eBPF`, `SystemTap`, `LTTng`, `ktap`, `dtrace4linux`, `OEL DTrace`, `sysdig`
 
 ### Tracing Frameworks +probes
-* For dynamic:
+* For dynamic...
   * Kernel tracing (function_calls, returns, numbers): `krpobes`
   * UserLevel tracing: `uprobes`
 
-### Tracer Tools
-| ***[Perf-Tools](https://github.com/brendangregg/perf-tools)*** | *< <(See Brendans website for full details)* ***DESCRIPTION*** |
+---
+### Tracer Tools (authored by Brendan Gregg)
+| ***Perf-Tools*** | *Full details @ his [GitHub](https://github.com/brendangregg/perf-tools)* |
 |:---|:---|
 ||
 | ***single-purpose*** |
@@ -60,7 +71,7 @@ else
 | `funcgraph` | Trace a graph of kernel code flow |
 | `kprobe` | Dynamically trace a kernel function call or return, with variables, and in-kernel filtering |
 
-### eBPF 
+### [eBPF](https://ebpf.io/projects)
 * Extended BPF: Programs on tracepoints
   * High-performance filtering: JIT
   * In-kernel summaries: maps
@@ -68,7 +79,7 @@ else
 
 
 ---
-## perf_events: Workflow
+## [perf_events](https://www.brendangregg.com/perf.html): Workflow
 
 | **COMMAND LINE** | **DESCRIPTION** |
 |:---|:---|
