@@ -108,6 +108,14 @@
 
 	 >>> sudo apt-get -y install lynx
 
+----------------------------------
+## Find broken packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> dpkg -l and invert grep from '^ii' entries
+
+	 >>> dpkg -l | grep -v '^ii'
+
+
 ### [ apt-get ] table
 =======================================================
    COMMAND    |  MEANING
