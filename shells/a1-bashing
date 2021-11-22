@@ -170,6 +170,7 @@
 -> pkill		- look up/signal processes by name || other_attrs
 -> shutdown	 	- shutdown or reboot the system
 -> xlogo	 	- sample testing window
+-> watch 		- execute a program periodically, showing output full screen
 ------------------
 -> pstree	 	- forest process tree (parent/child processes)
 -> vmstat	 	- System resource usage. See man-pages
